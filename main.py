@@ -23,17 +23,44 @@ def generateur_mdp():
             if not i.isalnum():
                 cpt_car = True
 
-    return "Votre nouveau mot de passe est : " + mdp + "\n"
+    return mdp 
 
 def afficher_mdp():
-    dict_mdp = {"gmail": {"user@gmail.com": "test_mdp_gmail"},
-                 "Facebook": {"user_facebook": "test_mdp_facebook"},
-                 "twitter": {"user_twitter": "test_mdp_twitter", "toto": "test_deuxieme_mdp"}}
+    dict_mdp = {
+        "gmail": {"user@gmail.com": "test_mdp_gmail"},
+        "Facebook": {"user_facebook": "test_mdp_facebook"},
+        "twitter": {
+            "user_twitter": "test_mdp_twitter", 
+            "toto": "test_deuxieme_mdp"
+        }
+    }
     for site in dict_mdp:
+        print("nom du site :", site, "\n------------------------")
         for log in dict_mdp[site]:
-            print("nom du site :", site, "\nnom d'utilisateur :", log, "\nmot de passe :", dict_mdp[site][log], "\n")
+            print("nom d'utilisateur :", log, "\nmot de passe :", dict_mdp[site][log], "\n")
     return dict_mdp
 
+class Credentials:
+    def __init__(self, dict={}):
+        self.__dict = dict
+
+    def __str__(self):
+        sentence = ""
+        for site in self.__dict:
+            sentence = sentence + site + "\n"
+        return sentence
+
+dict_cred = {
+    "gmail": {"user@gmail.com": "test_mdp_gmail"},
+    "Facebook": {"user_facebook": "test_mdp_facebook"},
+    "twitter": {
+        "user_twitter": "test_mdp_twitter", 
+        "toto": "test_deuxieme_mdp"
+    }
+}
+
 if __name__ == "__main__":
-    print(generateur_mdp())
-    afficher_mdp()
+    # print("Votre nouveau mot de passe est : " + generateur_mdp())
+    # afficher_mdp()
+    test = Credentials(dict_cred)
+    print(test)
