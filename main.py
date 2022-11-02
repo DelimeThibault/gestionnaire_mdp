@@ -1,66 +1,26 @@
-import random
+
 # fonction qui créée un mdp
-def generateur_mdp():
+def password_gen(self):
     alph_min = "abcdefghijklmnopqrstuvwxyz"
     alph_maj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     nombres = "0123456789"
     symboles = "@#$%&/\?"
-    cpt_lettre = False
-    cpt_chiffre = False
-    cpt_car = False
-    mdp = ""
+    flag_char = False
+    flag_number = False
+    flag_special = False
+    password = ""
 
-    caractere = alph_min + alph_maj + nombres + symboles
-    taille_mdp = 13
+    characters = alph_min + alph_maj + nombres + symboles
+    pwd_length = 13
 
-    while not (cpt_chiffre & cpt_lettre & cpt_car):
-        mdp = "".join(random.sample(caractere, taille_mdp))
-        for i in mdp:
+    while not (flag_char & flag_number & flag_special):
+        password = "".join(random.sample(characters, pwd_length))
+        for i in password:
             if i.isalpha():
-                cpt_lettre = True
+                flag_char = True
             if i.isdigit():
-                cpt_chiffre = True
+                flag_number = True
             if not i.isalnum():
-                cpt_car = True
-
-    return mdp 
-
-def afficher_mdp():
-    dict_mdp = {
-        "gmail": {"user@gmail.com": "test_mdp_gmail"},
-        "Facebook": {"user_facebook": "test_mdp_facebook"},
-        "twitter": {
-            "user_twitter": "test_mdp_twitter", 
-            "toto": "test_deuxieme_mdp"
-        }
-    }
-    for site in dict_mdp:
-        print("nom du site :", site, "\n------------------------")
-        for log in dict_mdp[site]:
-            print("nom d'utilisateur :", log, "\nmot de passe :", dict_mdp[site][log], "\n")
-    return dict_mdp
-
-class Credentials:
-    def __init__(self, dict={}):
-        self.__dict = dict
-
-    def __str__(self):
-        sentence = ""
-        for site in self.__dict:
-            sentence = sentence + site + "\n"
-        return sentence
-
-dict_cred = {
-    "gmail": {"user@gmail.com": "test_mdp_gmail"},
-    "Facebook": {"user_facebook": "test_mdp_facebook"},
-    "twitter": {
-        "user_twitter": "test_mdp_twitter", 
-        "toto": "test_deuxieme_mdp"
-    }
-}
-
-if __name__ == "__main__":
-    # print("Votre nouveau mot de passe est : " + generateur_mdp())
-    # afficher_mdp()
-    test = Credentials(dict_cred)
-    print(test)
+                flag_special = True
+    return password 
+    
