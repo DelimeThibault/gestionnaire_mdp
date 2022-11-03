@@ -1,4 +1,4 @@
-import random, cmd, sys
+import cmd
 class Credentials:
     def __init__(self, dict=None):
         if dict is None:
@@ -17,7 +17,6 @@ class Credentials:
                 password = dict_pwd[site][pseudo]
                 print("nom d'utilisateur :", pseudo, "\nmot de passe :", password, "\n")
         return dict_pwd
-
 
     def add_logs(self, site="", username="", password=""):
         if site == "":
@@ -40,30 +39,34 @@ class Interaction(cmd.Cmd):
     intro = 'Bienvenue dans le gestionnaire de MDP. Tapez ? pour la liste des commandes.\n'
     prompt = "(MVP) "
 
-    def do_init(self, line):
+    @staticmethod
+    def do_init(self):
         """Donne des valeurs tests par défaut"""
         dict_cred = {
             "gmail": {"user@gmail.com": "test_mdp_gmail"},
             "Facebook": {"user_facebook": "test_mdp_facebook"},
             "twitter": {
-                "user_twitter": "test_mdp_twitter", 
+                "user_twitter": "test_mdp_twitter",
                 "toto": "test_deuxieme_mdp"
             }
         }
         MVP.update(dict_cred)
 
-    def do_create(self, arg):
+    @staticmethod
+    def do_create(self):
         """Permet de créer un nouveau MDP"""
         site = input("nom du site: ")
         username = input("nom d'utilisateur: ")
         password = input("mot de passe: ")
         MVP.add_logs(site, username, password)
-    
-    def do_display(self, line):
+
+    @staticmethod
+    def do_display(self):
         """Affiche la liste des MDP"""
         MVP.display_pwd()
 
-    def do_EXIT(self, line):
+    @staticmethod
+    def do_EXIT(self):
         """Ferme le logiciel"""
         return True
 
