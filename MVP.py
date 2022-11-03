@@ -25,6 +25,10 @@ class Credentials:
         if site in self.__dict:
             print("existe")
             self.__dict[site][username] = password
+        else:
+            self.__dict[site] = {
+                username: password
+            }
 
     def __str__(self):
         sentence = ""
@@ -48,9 +52,11 @@ class Interaction(cmd.Cmd):
         }
         MVP.update(dict_cred)
 
-    def do_create(self, site="", username="", password=""):
-        """Permet de créer un nouveau MDP
-        format: site pseudo mdp"""
+    def do_create(self, arg):
+        """Permet de créer un nouveau MDP"""
+        site = input("nom du site: ")
+        username = input("nom d'utilisateur: ")
+        password = input("mot de passe: ")
         MVP.add_logs(site, username, password)
     
     def do_display(self, line):
@@ -64,6 +70,3 @@ class Interaction(cmd.Cmd):
 if __name__ == "__main__":
     MVP = Credentials()
     Interaction().cmdloop()
-    # MVP.display_pwd()
-    # MVP.add_logs("twitter","test fonction", "motdepasse")
-    # MVP.display_pwd()
