@@ -1,16 +1,25 @@
 import cmd
 class Credentials:
-    def __init__(self, dict=None):
-        if dict is None:
-            dict = {}
-        self.__dict = dict
+    """
+    Class which contains a dictionary with websites, username and password.
+    """
+    def __init__(self, dico=None):
+        if dico is None:
+            dico = {}
+        self.__dico = dico
 
-    def update(self, dict):
-        if dict:
-            self.__dict = dict
+    def update(self, dico):
+        """
+        Replace 'dict' attribute by the one given in parameter
+        Parameter:
+            dict: dictionary, required
+        """
+        if dico:
+            self.__dico = dico
 
     def display_pwd(self):
-        dict_pwd = self.__dict
+        """Display every informations in Credentials attribute"""
+        dict_pwd = self.__dico
         for site in dict_pwd:
             print("nom du site :", site, "\n------------------------")
             for pseudo in dict_pwd[site]:
@@ -18,24 +27,36 @@ class Credentials:
                 print("nom d'utilisateur :", pseudo, "\nmot de passe :", password, "\n")
         return dict_pwd
 
-    def add_logs(self, site="", username="", password=""):
+    def add_logs(self, site, username, password):
+        """
+        Function to add credentials to our data
+
+        Parameters:
+            site: str, required
+            username : str, required
+            password : str, required
+        Returns : None
+        """
         if site == "":
             return "Merci d'indiquer le site en premier paramètre de la fonction"
-        if site in self.__dict:
+        if site in self.__dico:
             print("existe")
-            self.__dict[site][username] = password
+            self.__dico[site][username] = password
         else:
-            self.__dict[site] = {
+            self.__dico[site] = {
                 username: password
             }
 
     def __str__(self):
         sentence = ""
-        for site in self.__dict:
+        for site in self.__dico:
             sentence = sentence + site + "\n"
         return sentence
 
 class Interaction(cmd.Cmd):
+    """
+    A class to make a CLI loop with multiple methods
+    """
     intro = 'Bienvenue dans le gestionnaire de MDP. Tapez ? pour la liste des commandes.\n'
     prompt = "(MVP) "
 
@@ -66,7 +87,7 @@ class Interaction(cmd.Cmd):
         MVP.display_pwd()
 
     @staticmethod
-    def do_EXIT(self):
+    def do_exit(self):
         """Ferme le logiciel"""
         return True
 
