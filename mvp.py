@@ -1,3 +1,4 @@
+"""MVP """
 import cmd
 class Credentials:
     """
@@ -46,6 +47,7 @@ class Credentials:
             self.__dico[site] = {
                 username: password
             }
+        return None
 
     def __str__(self):
         sentence = ""

@@ -1,12 +1,12 @@
+"""Fonction qui créée un mdp"""
 import random
-# fonction qui créée un mdp
-
 
 def password_gen():
+    """"Génération du mot de passe"""
     alph_min = "abcdefghijklmnopqrstuvwxyz"
     alph_maj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     nombres = "0123456789"
-    symboles = "@#$%&/\?"
+    symboles = r"@#$%&/\?"
     flag_char = False
     flag_number = False
     flag_special = False
@@ -15,7 +15,7 @@ def password_gen():
     characters = alph_min + alph_maj + nombres + symboles
     pwd_length = 13
 
-    while not (flag_char & flag_number & flag_special):
+    while not flag_char & flag_number & flag_special:
         password = "".join(random.sample(characters, pwd_length))
         for i in password:
             if i.isalpha():
