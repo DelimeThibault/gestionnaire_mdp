@@ -18,7 +18,7 @@ class Credentials:
             self.__dico = dico
 
     def display_pwd(self):
-        """Display every informations in Credentials attribute"""
+        """Display every information in Credentials attribute"""
         dict_pwd = self.__dico
         for site in dict_pwd:
             print("nom du site :", site, "\n------------------------")
