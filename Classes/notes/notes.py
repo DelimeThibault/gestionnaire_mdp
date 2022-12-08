@@ -1,4 +1,3 @@
-
 import tkinter
 import os
 from tkinter import *
@@ -172,7 +171,6 @@ class Notepad:
                 # Change the window title
                 self.__root.title(os.path.basename(self.__file) + " - Notepad")
 
-
         else:
             file = open(self.__file, "w")
             file.write(self.__thisTextArea.get(1.0, END))
@@ -191,8 +189,3 @@ class Notepad:
 
         # Run main application
         self.__root.mainloop()
-
-
-# Run main application
-notepad = Notepad(width=800, height=600)
-notepad.run()
