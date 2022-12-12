@@ -9,8 +9,8 @@ class Notepad:
     __root = Tk()
 
     # default window width and height
-    __thisWidth = 300
-    __thisHeight = 300
+    __this_width = 300
+    __this_height = 300
     __thisTextArea = Text(__root)
     __thisMenuBar = Menu(__root)
     __thisFileMenu = Menu(__thisMenuBar, tearoff=0)
@@ -32,12 +32,12 @@ class Notepad:
         # Set window size (the default is 300x300)
 
         try:
-            self.__thisWidth = kwargs['width']
+            self.__this_width = kwargs['width']
         except KeyError:
             pass
 
         try:
-            self.__thisHeight = kwargs['height']
+            self.__this_height = kwargs['height']
         except KeyError:
             pass
 
@@ -45,18 +45,18 @@ class Notepad:
         self.__root.title("Gestionnaire de mot de passe")
 
         # Center the window
-        screenWidth = self.__root.winfo_screenwidth()
-        screenHeight = self.__root.winfo_screenheight()
+        screen_width = self.__root.screen_height_screenwidth()
+        screen_height = self.__root.screen_height_screenheight()
 
         # For left-align
-        left = (screenWidth / 2) - (self.__thisWidth / 2)
+        left = (screen_width / 2) - (self.__this_width / 2)
 
         # For right-align
-        top = (screenHeight / 2) - (self.__thisHeight / 2)
+        top = (screen_height / 2) - (self.__this_height / 2)
 
         # For top and bottom
-        self.__root.geometry('%dx%d+%d+%d' % (self.__thisWidth,
-                                              self.__thisHeight,
+        self.__root.geometry('%dx%d+%d+%d' % (self.__this_width,
+                                              self.__this_height,
                                               left, top))
 
         # To make the textarea auto resizable
@@ -120,7 +120,7 @@ class Notepad:
         # exit()
 
     def __showAbout(self):
-        showinfo("Notepad", "Ta mère la pute")
+        shoscreen_height("Notepad", "Ta mère la pute")
 
     def __openFile(self):
 
