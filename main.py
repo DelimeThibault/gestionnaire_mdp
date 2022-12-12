@@ -1,9 +1,14 @@
 """Execution de l'application du gestionnaire de mot de passe"""
-
-import Classes.utilities.utilities
-from Classes.notes import ex_notes
-
-print(Classes.utilities.utilities.password_gen())
+from Classes.interface import gui
+# from Classes.utilities import utilities
+# from Classes.notes import notes
+# print(utilities.password_gen())
 # Run main application
-notepad = ex_notes.Notepad(width=800, height=600)
-notepad.run()
+# notepad = notes.Notepad(width=800, height=600)
+# notepad.run()
+
+
+if __name__ == "__main__":
+    app = gui.Application()
+    # app.title("Gestionnaire de mots de passe")
+    app.mainloop()
