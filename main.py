@@ -1,8 +1,9 @@
 """Execution de l'application du gestionnaire de mot de passe"""
-from Classes.interface import gui
-# from Classes.utilities import utilities
-# from Classes.notes import notes
-# print(utilities.password_gen())
+from packages.interface import gui
+from packages.utilities.password_function import password_generation
+# from packages.utilities import utilities
+# from packages.notes import notes
+print(password_generation())
 # Run main application
 # notepad = notes.Notepad(width=800, height=600)
 # notepad.run()

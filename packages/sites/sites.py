@@ -3,26 +3,23 @@
 class Sites:
     """Class pour créer/modifier/supprimer une note"""
     def __init__(self, name, url):
-        self.name = name
-        self.url = url
+        self.__name = name
+        self.__url = url
 
     @property
     def name(self):
         """Afficher le nom"""
-        return self.name
+        return self.__name
 
     @property
     def url(self):
         """Afficher l'URL"""
-        return self.url
+        return self.__url
 
     @name.setter
     def name(self, name):
-        self.name = name
+        self.__name = name
 
     @url.setter
     def url(self, url):
-        self.url = url
-
-    def __del__(self):
-        print("site supprimé")
+        self.__url = url
