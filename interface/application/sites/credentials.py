@@ -1,44 +1,104 @@
+import random
 """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
-from packages.sites.sites import Sites
-from packages.utilities.password_function import is_strong, is_unique, password_generation
+
+
 class Credentials:
     """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
-    def __init__(self, user_name, password):
-        self.__user_name = user_name
-        self.__password = password
+
+    def __init__(self, username, password=None):
+        self.__username = username
+        if password:
+            self.__password = password
+        else:
+            self.__password = self.password_generation()
 
     @property
-    def user_name(self):
+    def username(self):
         """Afficher le nom d'utilisateur"""
-        return self.__user_name
+        return self.__username
 
     @property
     def password(self):
         """Afficher le mot de passe"""
         return self.__password
 
-    @user_name.setter
-    def user_name(self, user_name):
-        self.user_name = user_name
+    @username.setter
+    def username(self, username):
+        self.user_name = username
 
     @password.setter
     def password(self, password):
         self.password = password
+
+    def password_generation(self):
+        """"Génération du mot de passe
+        PRE : /
+        POST : Renvoi un mot de passe fort qui respecte les critères présents dans le while.
+        """
+        alph_min = "abcdefghijklmnopqrstuvwxyz"
+        alph_maj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        nombres = "0123456789"
+        symboles = r"@#$%&/\?"
+        flag_char = False
+        flag_number = False
+        flag_special = False
+        password = ""
+
+        characters = alph_min + alph_maj + nombres + symboles
+        pwd_length = 13
+
+        while not flag_char & flag_number & flag_special:
+            password = "".join(random.sample(characters, pwd_length))
+            for i in password:
+                if i.isalpha():
+                    flag_char = True
+                if i.isdigit():
+                    flag_number = True
+                if not i.isalnum():
+                    flag_special = True
+        return password
+
+    def is_strong(self, password):
+        """Fonction qui permet de voir si le mot de passe est assez fort (possède maj, min,
+        nombre, caractère spécial, longueur de 13 caractères)
+        PRE : un mot de passe
+        POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
+        """
+        flag_char = False
+        flag_number = False
+        flag_special = False
+        length = len(password)
+
+        if length <= 12:
+            return f"Votre mot de passe n'est pas assez long. Il possède {length} caractères"
+        for i in password:
+            if i.isalpha():
+                flag_char = True
+            if i.isdigit():
+                flag_number = True
+            if not i.isalnum():
+                flag_special = True
+        if flag_char & flag_number & flag_special:
+            return True
+        return False
+
+    def is_unique(self, password):
+        """Fonction qui permet de voir si le mot de passe est utilisé dans le dictionnaire
+        PRE : un mot de passe
+        POST : renvoi True si le mdp n'est pas dans le dictionnaire, False s'il y est déjà.
+        """
+        dict_pwd = {}
+        if password in dict_pwd:
+            return False
+        return True
 
     def good_password(self):
         """Vérification si le mot de passe est correct
         PRE : un mot de passe doit être défini
         POST : Renvoi True si le mdp est unique et fort
         """
-        assert self.__password != "", "Il est nécessaire qu'un mot de passe soit défini"
-        if not is_strong(self.__password):
+        if not self.is_strong(self.__password):
             return "Votre mot de passe n'est pas assez fort"
-        if not is_unique(self.__password):
+        if not self.is_unique(self.__password):
             return "Votre mot de passe n'est pas unique "
         return True
-
-test = {}
-tmp_site = Sites("Twitter", "www.twitter.com")
-tmp_user_mdp = Credentials("user_name_test", password_generation())
-test[tmp_site.name] = {tmp_user_mdp.user_name: tmp_user_mdp.password}
-print(test)

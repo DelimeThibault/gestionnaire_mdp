@@ -1,7 +1,9 @@
 """Création de sites"""
 
+
 class Sites:
-    """Class pour créer/modifier/supprimer une note"""
+    """Class pour créer/modifier/supprimer un site"""
+
     def __init__(self, name, url):
         self.__name = name
         self.__url = url

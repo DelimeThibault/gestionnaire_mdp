@@ -4,6 +4,5 @@ from interface import gui
 
 
 if __name__ == "__main__":
-    app = gui.Application()
-    # app.title("Gestionnaire de mots de passe")
+    app = gui.Interface()
     app.mainloop()
