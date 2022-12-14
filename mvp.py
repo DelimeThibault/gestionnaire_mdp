@@ -1,9 +1,12 @@
 """MVP """
 import cmd
+
+
 class Credentials:
     """
     Class which contains a dictionary with websites, username and password.
     """
+
     def __init__(self, dico=None):
         if dico is None:
             dico = {}
@@ -25,7 +28,8 @@ class Credentials:
             print("nom du site :", site, "\n------------------------")
             for pseudo in dict_pwd[site]:
                 password = dict_pwd[site][pseudo]
-                print("nom d'utilisateur :", pseudo, "\nmot de passe :", password, "\n")
+                print("nom d'utilisateur :", pseudo,
+                      "\nmot de passe :", password, "\n")
         return dict_pwd
 
     def add_logs(self, site, username, password):
@@ -54,6 +58,7 @@ class Credentials:
         for site in self.__dico:
             sentence = sentence + site + "\n"
         return sentence
+
 
 class Interaction(cmd.Cmd):
     """
@@ -92,6 +97,7 @@ class Interaction(cmd.Cmd):
     def do_exit(self):
         """Ferme le logiciel"""
         return True
+
 
 if __name__ == "__main__":
     MVP = Credentials()
