@@ -36,6 +36,7 @@ def is_strong(password):
     PRE : un mot de passe
     POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
     """
+    assert password != "", "Il est nécessaire qu'un mot de passe soit défini"
     flag_char = False
     flag_number = False
     flag_special = False
@@ -59,6 +60,7 @@ def is_unique(password):
     PRE : un mot de passe
     POST : renvoi True si le mdp n'est pas dans le dictionnaire, False s'il y est déjà.
     """
+    assert password != "", "Il est nécessaire qu'un mot de passe soit défini"
     dict_pwd = {}
     if password in dict_pwd:
         return False

@@ -30,6 +30,7 @@ class Credentials:
         PRE : un mot de passe doit être défini
         POST : Renvoi True si le mdp est unique et fort
         """
+        assert self.__password != "", "Il est nécessaire qu'un mot de passe soit défini"
         if not is_strong(self.__password):
             return "Votre mot de passe n'est pas assez fort"
         if not is_unique(self.__password):
