@@ -1,6 +1,7 @@
 """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
 import random
 
+
 class Credentials:
     """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
 
@@ -58,37 +59,38 @@ class Credentials:
                     flag_special = True
         return password
 
-    @staticmethod
     def is_unique(self):
         """Fonction qui permet de voir si le mot de passe est utilisé dans le dictionnaire
         PRE : une chaine de caractères
         POST : renvoi True si le mdp n'est pas dans le dictionnaire, False s'il y est déjà.
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaine de caractères"
 
         dict_pwd = {}
         if self.password in dict_pwd:
             return False
         return True
 
-        def is_strong(self, password):
-            """Fonction qui permet de voir si le mot de passe est assez fort (possède maj, min,
-            nombre, caractère spécial, longueur de 13 caractères)
-            PRE : une chaine de caractères
-            POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
-            """
+    def is_strong(self):
+        """Fonction qui permet de voir si le mot de passe est assez fort (possède maj, min,
+        nombre, caractère spécial, longueur de 13 caractères)
+        PRE : une chaine de caractères
+        POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
+        """
         # vérification du type de la variable "password"
-        assert isinstance(password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaine de caractères"
 
         flag_char = False
         flag_number = False
         flag_special = False
-        length = len(password)
+        length = len(self.password)
 
         if length <= 12:
             return f"Votre mot de passe n'est pas assez long. Il possède {length} caractères"
-        for i in password:
+        for i in self.password:
             if i.isalpha():
                 flag_char = True
             if i.isdigit():
@@ -105,7 +107,8 @@ class Credentials:
         POST : Renvoi True si le mdp est unique et fort
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaine de caractères"
         if not Credentials.is_strong(self.password):
             return "Votre mot de passe n'est pas assez fort"
         if not Credentials.is_unique(self.password):

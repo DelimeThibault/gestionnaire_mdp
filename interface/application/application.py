@@ -33,7 +33,7 @@ class Application:
         new_site = Sites(site, url)
         new_cred = Credentials(pseudo, password)
         obj = {}
-        obj[new_site.name] += {new_cred.username: new_cred.password}
+        obj[new_site.name] = {new_cred.username: new_cred.password}
         print(obj)
         collection.insert_one(obj)
 

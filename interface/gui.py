@@ -16,7 +16,7 @@ class Interface(tk.Tk):
 
         # Set icon
         try:
-            self.iconbitmap(Path(r"Classes\interface\lock.ico"))
+            self.iconbitmap(Path(r"interface\lock.ico"))
         except FileNotFoundError:
             print('Fichier introuvable.')
         except IOError:
