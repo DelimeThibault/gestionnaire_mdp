@@ -23,6 +23,3 @@ class Notes:
     @text.setter
     def text(self, text):
         self.text = text
-
-    def __del__(self):
-        print("note supprimé")
