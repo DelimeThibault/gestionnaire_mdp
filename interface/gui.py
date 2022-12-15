@@ -68,7 +68,7 @@ class Interface(tk.Tk):
         self.create.pack()
 
     def select_file(self):
-        """Permet de sélectionner un fichier si il n'a pas été trouvé"""
+        """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
         filetypes = (
             ('json files', '*.json'),
             ('All files', '*.*')
