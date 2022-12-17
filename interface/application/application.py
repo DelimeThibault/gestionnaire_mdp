@@ -1,29 +1,13 @@
 """Module parent utilisant les objets Credentials et les connexions MongoDB"""
-import os
-from dotenv import load_dotenv
-import pymongo
-from pymongo import MongoClient
 from .sites.sites import Sites
 from .sites.credentials import Credentials
 
 # Sites = sites.Sites
 # Credentials = credentials.Credentials
-load_dotenv()
-cluster = MongoClient(os.getenv("MONGO"))
-
-db = cluster["DEV2"]
-collection = db["credentials"]
-
-# results = collection.find()
-# for document in results:
-#     print(document)
 
 
 class Application:
     """Classe parent permettant la création/modification/suppression d'objets Credentials"""
-
-    # def __init__(self):
-    #     self.__entry = {}
 
     def add_credentials(self, site, pseudo, password, url="undefined"):
         """
@@ -35,7 +19,6 @@ class Application:
         obj = {}
         obj[new_site.name] = {new_cred.username: new_cred.password}
         print(obj)
-        collection.insert_one(obj)
 
     def modify_credentials(self):
         """
