@@ -124,7 +124,8 @@ class PasswordManager(tk.Tk):
 
     def add_info(self):
         # Créer un cadre pour ajouter les infos
-        self.add_frame = tk.Frame(self)
+        self.add_frame = tk.Toplevel(self)
+        self.add_frame.title("Nouvelle page")
         self.add_frame.pack()
 
         # Créer une étiquette et un champ de saisie pour le mot de passe
@@ -157,6 +158,21 @@ class PasswordManager(tk.Tk):
             username_entry.delete(0, "end")
             password_entry.delete(0, "end")
             update_list()'''
+
+    '''def delete_password():
+        selection = self.password_list.curselection()
+        if selection:
+            index = selection[0]
+            del identification_list[index]
+            update_list()'''
+
+    '''def copy_password():
+        selection = self.password_list.curselection()
+        if selection:
+            index = selection[0]
+            root.clipboard_clear()
+            root.clipboard_append(identification_list[index][1])'''
+
     def show_main_page(self):
         # Détruire la page de login
         self.login_frame.destroy()
@@ -166,30 +182,26 @@ class PasswordManager(tk.Tk):
         self.password_list_frame.pack()
         self.password_list_label = tk.Label(self.password_list_frame, text="Mots de passe enregistrés:")
         self.password_list_label.pack()
-        self.password_list = tk.Listbox(self.password_list_frame, width=50)
+        self.password_list = tk.Listbox(self.password_list_frame, height=10, width=50)
         self.password_list.pack()
 
         # Mettre à jour la liste des mots de passe enregistrés
         #self.update_password_list()
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
-        self.copy_password_button = tk.Button(self.password_list_frame, text="Copier le mot de passe"''',
-                                              command=self.copy_password''')
+        self.copy_password_button = tk.Button(self.password_list_frame, text="Copier le mot de passe")#,command=self.copy_password
         self.copy_password_button.pack(side="left")
 
         # Créer un bouton pour ajouter un nouveau mot de passe
-        self.add_password_button = tk.Button(self.password_list_frame, text="Ajouter un mot de passe",
-                                             command=self.add_info)
+        self.add_password_button = tk.Button(self.password_list_frame, text="Ajouter un mot de passe",command=self.add_info)
         self.add_password_button.pack(side="left")
 
         # Créer un bouton pour modifier le mot de passe sélectionné
-        self.edit_password_button = tk.Button(self.password_list_frame, text="Modifier le mot de passe"''',
-                                              command=self.edit_password''')
+        self.edit_password_button = tk.Button(self.password_list_frame, text="Modifier le mot de passe")#, command=self.edit_password
         self.edit_password_button.pack(side="left")
 
         # Créer un bouton pour supprimer le mot de passe sélectionné
-        self.delete_password_button = tk.Button(self.password_list_frame, text="Supprimer le mot de passe"''',
-                                                command=self.delete_password''')
+        self.delete_password_button = tk.Button(self.password_list_frame, text="Supprimer le mot de passe")#,command=self.delete_password
         self.delete_password_button.pack(side="left")
 
 if __name__ == "__main__":
