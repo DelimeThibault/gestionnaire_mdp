@@ -9,16 +9,17 @@ from .sites.credentials import Credentials
 class Application:
     """Classe parent permettant la création/modification/suppression d'objets Credentials"""
 
-    def add_credentials(self, site:str, username:str, password:str):
+    @staticmethod
+    def add_credentials(site: str, username: str, password: str) -> dict:
         """
         PRE : reçoit le nom du site (String), le pseudo (String) et le mot de passe (String) ainsi que l'url (non-obligatoire)
         POST : Créé une entrée dans la base de données avec les informations
         """
 
         new_cred = Credentials(username, password)
-        obj = {}
+        obj = dict()
         obj[site] = {new_cred.username: new_cred.password}
-        print(obj)
+        return obj
 
     def modify_credentials(self):
         """
