@@ -1,10 +1,7 @@
 """Execution de l'application du gestionnaire de mot de passe"""
-from interface import gui
-#from interface import login
-# Run main application
+from interface import login
 
 
 if __name__ == "__main__":
-    # login.firstTime()
-    app = gui.Interface()
+    app = login.PasswordManager()
     app.mainloop()
