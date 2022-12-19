@@ -62,7 +62,7 @@ class PasswordManager(tk.Tk):
 
         # Créer une étiquette et un champ de saisie pour la question personnelle
         self.question_label = tk.Label(
-            self.signup_frame, text="Question personnelle:")
+            self.signup_frame, text="Question personnelle: \n Ou êtes-vous né?")
         self.question_label.pack()
         self.question_entry = tk.Entry(self.signup_frame, width=30)
         self.question_entry.pack()
@@ -186,7 +186,11 @@ class PasswordManager(tk.Tk):
         self.password_list.delete(0, "end")
         print(self.password_database.items())
         for site, credentials in self.password_database.items():
-            self.password_list.insert(tk.END, f" {site}, {credentials}\n")
+            self.password_list.insert(tk.END, f" {site}:\n")#f"{site} : \n{keys} : {self.password_database[site][keys]}"
+            for username, password in credentials.items():
+                self.password_list.insert(tk.END,
+                                          f" \t \t \t \t \t{username}, {password}\n")  # f"{site} : \n{keys} : {self.password_database[site][keys]}"
+
 
     def show_main_page(self):
         """Page principale qui redirige vers les opérations CRUD (boutons)"""
