@@ -66,9 +66,6 @@ class PasswordManager(tk.Tk):
         except IOError:
             print('Erreur IO.')
 
-        # Afficher la page de login
-        # self.show_signup_page()
-
     def center_window(self, width, height):
         # Center the window
         screen_width = self.winfo_screenwidth()
@@ -112,7 +109,8 @@ class PasswordManager(tk.Tk):
         password = self.password_entry.get()
         question = self.question_entry.get()
 
-        # Vérifier si le mot de passe et la question personnelle sont valides (par exemple, s'assurer qu'ils ne sont pas vides)
+        # Vérifier si le mot de passe et la question personnelle sont valides
+        # (par exemple, s'assurer qu'ils ne sont pas vides)
         if password == "" or question == "":
             messagebox.showerror(
                 "Erreur", "Mot de passe et question personnelle sont obligatoires")
@@ -132,7 +130,7 @@ class PasswordManager(tk.Tk):
                 json.dump(self.signin_database, file,
                           sort_keys=True, indent=4)
         except FileNotFoundError:
-            return ("ERROR DB NOT FOUND")
+            return "ERROR DB NOT FOUND"
 
         # Afficher un message de confirmation et passer à la page de login
         messagebox.showinfo("Succès", "Inscription réussie!")
@@ -149,6 +147,7 @@ class PasswordManager(tk.Tk):
         # Créer une étiquette et un champ de saisie pour le mot de passe
         self.password_label = tk.Label(
             self.login_frame, text="Mot de passe:\n (Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
+        self.password_label = tk.Label(self.login_frame, text="Mot de passe:\n(Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
         self.password_label.pack()
         self.password_entry = tk.Entry(self.login_frame, show="*", width=30)
         self.password_entry.pack()
@@ -230,8 +229,7 @@ class PasswordManager(tk.Tk):
         self.password_entry = tk.Entry(self.add_frame, show="*", width=30)
         self.password_entry.pack()
         self.password_list_frame = tk.Frame()
-        # self.geometry('1200x450')
-        #self.center_window(1200, 450)
+
         self.password_list_frame.pack()
 
         # Créer un bouton pour ajouter
@@ -336,6 +334,12 @@ class PasswordManager(tk.Tk):
         my_user.trace('w', update)
         my_pwd.trace('w', update)
 
+    # def delete_password(self):
+    #    selection = self.password_list.curselection()
+    #    if selection:
+    #        index = selection[0]
+    #        del self.password_list[index]
+    #        self.update_list()
     def update_list(self):
         self.sort_password()
         self.password_list.delete(0, "end")
@@ -376,19 +380,19 @@ class PasswordManager(tk.Tk):
         self.add_password_button = tk.Button(
             self.password_list_frame, text="Ajouter un mot de passe", command=self.add_info)
         self.add_password_button.pack(side="left")
-        #self.add_password_button.grid(column=1, row=0)
+        # self.add_password_button.grid(column=1, row=0)
 
         # Créer un bouton pour modifier le mot de passe sélectionné
         self.edit_password_button = tk.Button(
             self.password_list_frame, text="Modifier le mot de passe", command=self.edit_password)
         self.edit_password_button.pack(side="left")
-        #self.edit_password_button.grid(column=0, row=1)
+        # self.edit_password_button.grid(column=0, row=1)
 
         # Créer un bouton pour supprimer le mot de passe sélectionné
         self.delete_password_button = tk.Button(
             self.password_list_frame, text="Supprimer le mot de passe")  # ,command=self.delete_password
         self.delete_password_button.pack(side="left")
-        #self.delete_password_button.grid(column=1, row=1)
+        # self.delete_password_button.grid(column=1, row=1)
 
     def select_file(self):
         """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
@@ -412,7 +416,7 @@ class PasswordManager(tk.Tk):
 
         if key in self.password_database.keys():
             if user in self.password_database[key]:
-                return ("Cet utilisateur existe déjà")
+                return "Cet utilisateur existe déjà"
             else:
                 self.password_database[key].update(infos)
         else:
@@ -423,7 +427,7 @@ class PasswordManager(tk.Tk):
                 json.dump(self.password_database, file,
                           sort_keys=True, indent=4)
         except FileNotFoundError:
-            return ("ERROR DB NOT FOUND")
+            return "ERROR DB NOT FOUND"
 
         self.update_list()
         self.add_frame.destroy()
@@ -444,6 +448,7 @@ class PasswordManager(tk.Tk):
             dict_sort[i] = dict(sorted(dict_sort[i].items()))
 
         self.password_database = dict_sort
+
 
     def update_credentials(self):
         site = self.selected_site
