@@ -20,6 +20,7 @@ class PasswordManager(tk.Tk):
         self.password_database = dict()
         self.signin_database = dict()
         self.center_window(self.__this_width, self.__this_height)
+        self.clipboard = ""
         # Ouvre le fichier contenant les mdp
         try:
             with open(Path(r"db/credentials.json"), encoding="utf-8") as file:
@@ -360,13 +361,14 @@ class PasswordManager(tk.Tk):
         self.password_list = tk.Listbox(
             self.password_list_frame, height=15, width=60)
         self.password_list.pack()
+        self.password_list.bind("<<ListboxSelect>>", self.selected_value)
 
         # Mettre à jour la liste des mots de passe enregistrés
         self.update_list()
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
         self.copy_password_button = tk.Button(
-            self.password_list_frame, text="Copier le mot de passe")  # ,command=self.copy_password
+            self.password_list_frame, text="Copier le mot de passe", command=self.copy_password)
         self.copy_password_button.pack(side="left")
         #self.copy_password_button.grid(column=0, row=0)
 
@@ -457,3 +459,15 @@ class PasswordManager(tk.Tk):
         except FileNotFoundError:
             return ("ERROR DB NOT FOUND")
         self.modify.destroy()
+
+    def selected_value(self, evt):
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
+        if value != "":
+            print(value)
+            self.clipboard = value
+
+    def copy_password(self):
+        self.clipboard_clear()
+        self.clipboard_append(self.clipboard.strip().split(", ")[-1])
