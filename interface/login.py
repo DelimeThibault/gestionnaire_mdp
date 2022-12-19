@@ -274,3 +274,19 @@ class PasswordManager(tk.Tk):
     def modify_password(self, site=None, username=None, password=None):
         """Modifie le mot de passe dans le fichier avec de nouvelles valeurs sur base du site et username donnés"""
         print(self.password_database)
+
+    def search_password(self, site):
+        """Cette fonction recherche un site dans la base de donnée"""
+        if self.password_database[site]:
+            for keys in self.password_database[site]:
+                result = f"{site} : \n{keys} : {self.password_database[site][keys]}"
+                return result
+        else:
+            return None
+
+    def sort_password(self):
+        dict_sort = {}
+        for site in sorted(self.password_database.keys()):
+            for user in self.password_database[site]:
+                dict_sort[site] = {user: self.password_database[site][user]}
+        return dict_sort
