@@ -5,6 +5,7 @@ from pathlib import Path
 # from tkinter import simpledialog
 from .application import application
 import json
+from json.decoder import JSONDecodeError
 
 
 class PasswordManager(tk.Tk):
@@ -35,6 +36,8 @@ class PasswordManager(tk.Tk):
             )
 
             self.open_button.pack(expand=True)
+        except JSONDecodeError:
+            pass
 
         # Change l'icône
         try:
@@ -139,13 +142,16 @@ class PasswordManager(tk.Tk):
         # Créer une étiquette et un champ de saisie pour le mot de passe
         self.site_label = tk.Label(self.add_frame, text="Site:")
         self.site_label.pack()
-        self.site_entry = tk.Entry(self.add_frame, width=30)
+        my_site = tk.StringVar(self.add_frame)
+        self.site_entry = tk.Entry(
+            self.add_frame, width=30, textvariable=my_site)
         self.site_entry.pack()
-        print(self.site_entry.get())
         self.username_label = tk.Label(
             self.add_frame, text="Nom d'utilisateur:")
         self.username_label.pack()
-        self.username_entry = tk.Entry(self.add_frame, width=30)
+        my_user = tk.StringVar(self.add_frame)
+        self.username_entry = tk.Entry(
+            self.add_frame, width=30, textvariable=my_user)
         self.username_entry.pack()
         self.password_label = tk.Label(
             self.add_frame, text="Mot de passe: \n (si vous n'en entrer pas, un mot de passe fort sera automatiquement créé)")
@@ -157,9 +163,18 @@ class PasswordManager(tk.Tk):
         self.password_list_frame.pack()
 
         # Créer un bouton pour ajouter
-        self.add_button = tk.Button(self.add_frame, text="Ajouter", command=lambda: self.add_password(
+        self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled", command=lambda: self.add_password(
             self.site_entry.get(), self.username_entry.get(), self.password_entry.get()))
         self.add_button.pack()
+
+        def update(*args):
+            print(my_site.get(), my_user.get())
+            if len(my_site.get()) == 0 or len(my_user.get()) == 0:
+                self.add_button.config(state="disabled")
+            else:
+                self.add_button.config(state="normal")
+        my_user.trace('w', update)
+        my_site.trace('w', update)
 
    # def edit_password(self):
    #     selection = self.password_list.curselection()
@@ -222,6 +237,7 @@ class PasswordManager(tk.Tk):
             filetypes=filetypes)
 
     def add_password(self, site, username, password):
+        """Ajoute un mot de passe dans le fichier si le couple site/username n'existe pas encore"""
         print(self.password_database)
         new_pwd = application.Application.add_credentials(
             site, username, password)
@@ -244,3 +260,7 @@ class PasswordManager(tk.Tk):
                           sort_keys=True, indent=4)
         except FileNotFoundError:
             return ("ERROR DB NOT FOUND")
+
+    def modify_password(self, site=None, username=None, password=None):
+        """Modifie le mot de passe dans le fichier avec de nouvelles valeurs sur base du site et username donnés"""
+        print(self.password_database)

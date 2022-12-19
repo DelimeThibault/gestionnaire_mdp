@@ -5,7 +5,7 @@ import random
 class Credentials:
     """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
 
-    def __init__(self, username, password=None):
+    def __init__(self, username: str, password: str = None):
         self.__username = username
         if password:
             self.__password = password
@@ -23,11 +23,11 @@ class Credentials:
         return self.__password
 
     @username.setter
-    def username(self, username):
+    def username(self, username: str):
         self.username = username
 
     @password.setter
-    def password(self, password):
+    def password(self, password: str):
         self.password = password
 
     @staticmethod
