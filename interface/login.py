@@ -22,7 +22,6 @@ class PasswordManager(tk.Tk):
         try:
             with open(Path(r"db/credentials.json"), encoding="utf-8") as file:
                 data = json.load(file)
-                print(data)
                 self.password_database = data
         except FileNotFoundError:
             self.label = tk.Label(self, text='Pas de fichier trouvé')
@@ -168,7 +167,6 @@ class PasswordManager(tk.Tk):
         self.add_button.pack()
 
         def update(*args):
-            print(my_site.get(), my_user.get())
             if len(my_site.get()) == 0 or len(my_user.get()) == 0:
                 self.add_button.config(state="disabled")
             else:
@@ -184,6 +182,11 @@ class PasswordManager(tk.Tk):
    #         username_entry.delete(0, "end")
    #         password_entry.delete(0, "end")
    #         update_list()
+    def update_list(self):
+        self.password_list.delete(0, "end")
+        print(self.password_database.items())
+        for site, credentials in self.password_database.items():
+            self.password_list.insert(tk.END, f" {site}, {credentials}\n")
 
     def show_main_page(self):
         """Page principale qui redirige vers les opérations CRUD (boutons)"""
@@ -202,7 +205,7 @@ class PasswordManager(tk.Tk):
         self.password_list.pack()
 
         # Mettre à jour la liste des mots de passe enregistrés
-        # self.update_password_list()
+        self.update_list()
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
         self.copy_password_button = tk.Button(
@@ -252,7 +255,6 @@ class PasswordManager(tk.Tk):
                 self.password_database[key].update(infos)
         else:
             self.password_database[key] = infos
-        print(self.password_database)
         # Ouvre le fichier contenant les mdp
         try:
             with open(Path(r"db/credentials.json"), 'w', encoding="utf-8") as file:
@@ -260,6 +262,10 @@ class PasswordManager(tk.Tk):
                           sort_keys=True, indent=4)
         except FileNotFoundError:
             return ("ERROR DB NOT FOUND")
+
+        self.update_list()
+        self.add_frame.destroy()
+
 
     def modify_password(self, site=None, username=None, password=None):
         """Modifie le mot de passe dans le fichier avec de nouvelles valeurs sur base du site et username donnés"""
