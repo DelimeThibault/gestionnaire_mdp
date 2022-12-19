@@ -31,7 +31,7 @@ class Credentials:
         self.password = password
 
     @staticmethod
-    def password_generation():
+    def password_generation() -> str:
         """"Génération du mot de passe
         PRE : /
         POST : Renvoi un mot de passe fort qui respecte les critères présents dans le while.

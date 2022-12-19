@@ -66,7 +66,7 @@ class PasswordManager(tk.Tk):
             print('Erreur IO.')
 
         # Afficher la page de login
-        #self.show_signup_page()
+        # self.show_signup_page()
 
     def center_window(self, width, height):
         # Center the window
@@ -118,7 +118,7 @@ class PasswordManager(tk.Tk):
             return
 
         # Vérifier si l'utilisateur est déjà enregistré dans la base de données
-        #if question in self.signup_database:
+        # if question in self.signup_database:
         #    messagebox.showerror("Erreur", "L'utilisateur est déjà enregistré")
         #    return
 
@@ -133,7 +133,6 @@ class PasswordManager(tk.Tk):
         except FileNotFoundError:
             return ("ERROR DB NOT FOUND")
 
-
         # Afficher un message de confirmation et passer à la page de login
         messagebox.showinfo("Succès", "Inscription réussie!")
         self.show_login_page()
@@ -147,7 +146,8 @@ class PasswordManager(tk.Tk):
         self.login_frame.pack()
 
         # Créer une étiquette et un champ de saisie pour le mot de passe
-        self.password_label = tk.Label(self.login_frame, text="Mot de passe:\n (Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
+        self.password_label = tk.Label(
+            self.login_frame, text="Mot de passe:\n (Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
         self.password_label.pack()
         self.password_entry = tk.Entry(self.login_frame, show="*", width=30)
         self.password_entry.pack()
@@ -158,7 +158,7 @@ class PasswordManager(tk.Tk):
         self.login_button.pack()
 
     def show_question_page(self):
-        #détruire la page de login
+        # détruire la page de login
         self.login_frame.destroy()
         # Créer un cadre pour afficher le formulaire de question
         self.question_frame = tk.Frame(self)
@@ -166,7 +166,8 @@ class PasswordManager(tk.Tk):
         self.question_frame.pack()
 
         # Créer une étiquette et un champ de saisie pour la question
-        self.question_label = tk.Label(self.question_frame, text="Ou êtes-vous né?")
+        self.question_label = tk.Label(
+            self.question_frame, text="Ou êtes-vous né?")
         self.question_label.pack()
         self.question_entry = tk.Entry(self.question_frame, show="*", width=30)
         self.question_entry.pack()
@@ -189,6 +190,7 @@ class PasswordManager(tk.Tk):
         else:
             # Si le mot de passe est incorrect, afficher un message d'erreur
             messagebox.showerror("Erreur", "Mot de passe incorrect")
+
     def question(self):
         # Récupérer la réponse a la question personnelle entrée par l'utilisateur
         question = self.question_entry.get()
@@ -201,11 +203,10 @@ class PasswordManager(tk.Tk):
             # Si la réponse a la question personnelle est incorrecte, afficher un message d'erreur
             messagebox.showerror("Erreur", "Réponse a la question incorrecte")
 
-
     def add_info(self):
         # Créer un cadre pour ajouter les infos
         self.add_frame = tk.Toplevel(self)
-        self.add_frame.title("Nouvelle page")
+        self.add_frame.title("Ajouter un mot de passe")
         # self.add_frame.pack()
 
         # Créer une étiquette et un champ de saisie pour le mot de passe
@@ -228,13 +229,13 @@ class PasswordManager(tk.Tk):
         self.password_entry = tk.Entry(self.add_frame, show="*", width=30)
         self.password_entry.pack()
         self.password_list_frame = tk.Frame()
-        #self.geometry('1200x450')
+        # self.geometry('1200x450')
         #self.center_window(1200, 450)
         self.password_list_frame.pack()
 
         # Créer un bouton pour ajouter
         self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled", command=lambda: self.add_password(
-            self.site_entry.get(), self.username_entry.get(), self.password_entry.get()))
+            self.site_entry.get().upper(), self.username_entry.get(), self.password_entry.get()))
         self.add_button.pack()
 
         def update(*args):
@@ -245,12 +246,95 @@ class PasswordManager(tk.Tk):
         my_user.trace('w', update)
         my_site.trace('w', update)
 
-    #def delete_password(self):
-    #    selection = self.password_list.curselection()
-    #    if selection:
-    #        index = selection[0]
-    #        del self.password_list[index]
-    #        self.update_list()
+    def edit_password(self):
+        self.modif_frame = tk.Toplevel(self)
+        self.modif_frame.title("Modifier un mot de passe")
+        self.selected_site = ""
+        self.listbox_site = tk.Listbox(self.modif_frame)
+        self.listbox_site.pack()
+        self.listbox_site.bind('<<ListboxSelect>>', self.change_site)
+        for site in self.password_database:
+            self.listbox_site.insert(tk.END, site)
+
+        # ,command=lambda:select_credentials())
+        self.site_btn = tk.Button(
+            self.modif_frame, state="disabled", text="Suivant", command=self.select_username)
+        self.site_btn.pack()
+
+    def change_site(self, evt):
+        """Stocke la valeur sélectionnée dans un attribut self.selected_site"""
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
+        if value != "":
+            self.selected_site = value
+            self.site_btn.config(state="normal")
+
+    def change_user(self, evt):
+        """Stocke la valeur sélectionnée dans un attribut self.selected_user"""
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
+        if value != "":
+            self.selected_user = value
+            self.cred_btn.config(state="normal")
+
+    def select_username(self):
+        self.modif_frame.destroy()
+        self.username_frame = tk.Toplevel(self)
+        self.username_frame.title('Modifier un mot de passe')
+        self.selected_user = ""
+        self.listbox_cred = tk.Listbox(self.username_frame)
+        self.listbox_cred.pack()
+        self.listbox_cred.bind('<<ListboxSelect>>', self.change_user)
+        for username in self.password_database[self.selected_site]:
+            self.listbox_cred.insert(
+                tk.END, username)
+
+        self.cred_btn = tk.Button(
+            self.username_frame, state="disabled", text="Modifier", command=self.modify_credentials)
+        self.cred_btn.pack()
+
+    def modify_credentials(self):
+        self.username_frame.destroy()
+        self.modify = tk.Toplevel(self)
+        self.modify.title('Modifier informations')
+        my_user = tk.StringVar(self.modify)
+        my_pwd = tk.StringVar(self.modify)
+        self.label_site = tk.Label(
+            self.modify, text="Nouveau nom d'utilisateur (n'écrivez rien si vous voulez le conserver)")
+        self.label_site.pack()
+        self.user_entry = tk.Entry(self.modify, textvariable=my_user)
+        self.user_entry.pack()
+        self.label_pwd = tk.Label(self.modify, text="Nouveau mot de passe")
+        self.label_pwd.pack()
+        self.pwd_entry = tk.Entry(self.modify, textvariable=my_pwd)
+        self.pwd_entry.pack()
+        self.new_user = self.selected_user
+        self.new_pwd = ''
+
+        # Bouton pour modifier
+        self.button = tk.Button(
+            self.modify, text="Mettre à jour", command=self.update_credentials)
+        self.button.pack()
+
+        def update(*args):
+            if len(my_user.get()) == 0:
+                self.new_user = self.selected_user
+                if len(my_pwd.get()) == 0:
+                    self.new_pwd = application.Credentials.password_generation()
+                else:
+                    self.new_pwd = my_pwd.get()
+            elif len(my_user.get()) > 0:
+                self.new_user = my_user.get()
+                if len(my_pwd.get()) == 0:
+                    self.new_pwd = application.Credentials.password_generation()
+                else:
+                    self.new_pwd = my_pwd.get()
+                del self.password_database[self.selected_site][self.selected_user]
+        my_user.trace('w', update)
+        my_pwd.trace('w', update)
+
     def update_list(self):
         self.sort_password()
         self.password_list.delete(0, "end")
@@ -267,7 +351,7 @@ class PasswordManager(tk.Tk):
 
         # Créer un cadre pour afficher la liste des mots de passe enregistrés et les widgets associés
         self.password_list_frame = tk.Frame()
-        #self.geometry('1200x300')
+        # self.geometry('1200x300')
         self.center_window(590, 305)
         self.password_list_frame.pack()
         self.password_list_label = tk.Label(
@@ -294,7 +378,7 @@ class PasswordManager(tk.Tk):
 
         # Créer un bouton pour modifier le mot de passe sélectionné
         self.edit_password_button = tk.Button(
-            self.password_list_frame, text="Modifier le mot de passe")  # , command=self.edit_password
+            self.password_list_frame, text="Modifier le mot de passe", command=self.edit_password)
         self.edit_password_button.pack(side="left")
         #self.edit_password_button.grid(column=0, row=1)
 
@@ -342,9 +426,6 @@ class PasswordManager(tk.Tk):
         self.update_list()
         self.add_frame.destroy()
 
-    def modify_password(self, site=None, username=None, password=None):
-        """Modifie le mot de passe dans le fichier avec de nouvelles valeurs sur base du site et username donnés"""
-
     def search_password(self, site):
         """Cette fonction recherche un site dans la base de donnée"""
         if self.password_database[site]:
@@ -362,3 +443,17 @@ class PasswordManager(tk.Tk):
 
         self.password_database = dict_sort
 
+    def update_credentials(self):
+        site = self.selected_site
+        user = self.new_user
+        if self.new_pwd == "":
+            self.new_pwd = application.Credentials.password_generation()
+        self.password_database[site][user] = self.new_pwd
+        self.update_list()
+        try:
+            with open(Path(r"db/credentials.json"), 'w', encoding="utf-8") as file:
+                json.dump(self.password_database, file,
+                          sort_keys=True, indent=4)
+        except FileNotFoundError:
+            return ("ERROR DB NOT FOUND")
+        self.modify.destroy()
