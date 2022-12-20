@@ -479,7 +479,11 @@ class PasswordManager(tk.Tk):
         self.add_frame.destroy()
 
     def search_password(self, site):
-        """Cette fonction recherche un site dans la base de donnée"""
+        """Cette fonction recherche un site entré en paramètre dans la base de donnée
+        PRE : Le paramètre site doit être une string
+        POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
+        """
+        assert isinstance(site, str), "Veuillez entrer une chaine de caractères"
         if self.password_database[site]:
             for keys in self.password_database[site]:
                 result = f"{site} : \n{keys} : {self.password_database[site][keys]}"
@@ -488,7 +492,10 @@ class PasswordManager(tk.Tk):
             return None
 
     def sort_password(self):
-        """Trie notre dictionnaire par ordre alphabétique"""
+        """Trie notre dictionnaire par ordre alphabétique
+        PRE : /
+        POST : Renvoi le dictionnaire trié par ordre alphabétique.
+        """
         dict_sort = dict(sorted(self.password_database.items())).copy()
         for i in dict_sort:
             dict_sort[i] = dict(sorted(dict_sort[i].items()))
