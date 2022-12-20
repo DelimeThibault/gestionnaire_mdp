@@ -7,7 +7,6 @@ from .application import application
 import json
 from json.decoder import JSONDecodeError
 
-
 class PasswordManager(tk.Tk):
     """Interface graphique avec Tkinter"""
 

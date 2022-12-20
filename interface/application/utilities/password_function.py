@@ -1,21 +1,17 @@
 """Fonctions qui génèrent un mdp, vérifie s'il est fort, s'il est unique,"""
 import random
+import string
 
 def password_generation():
     """"Génération du mot de passe
     PRE : /
     POST : Renvoi un mot de passe fort qui respecte les critères présents dans le while.
     """
-    alph_min = "abcdefghijklmnopqrstuvwxyz"
-    alph_maj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    nombres = "0123456789"
-    symboles = r"@#$%&/\?"
+    characters = string.ascii_letters + string.punctuation + string.digits
     flag_char = False
     flag_number = False
     flag_special = False
     password = ""
-
-    characters = alph_min + alph_maj + nombres + symboles
     pwd_length = 13
 
     while not flag_char & flag_number & flag_special:
@@ -28,7 +24,6 @@ def password_generation():
             if not i.isalnum():
                 flag_special = True
     return password
-
 
 def is_strong(password):
     """Fonction qui permet de voir si le mot de passe est assez fort (possède maj, min,
