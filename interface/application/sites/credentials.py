@@ -1,11 +1,12 @@
 """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
 import random
+import string
 
 
 class Credentials:
     """Création du nom d'utilisateur et mdp avec vérification de celui-ci"""
 
-    def __init__(self, username, password=None):
+    def __init__(self, username: str, password: str = None):
         self.__username = username
         if password:
             self.__password = password
@@ -23,11 +24,11 @@ class Credentials:
         return self.__password
 
     @username.setter
-    def username(self, username):
+    def username(self, username: str):
         self.username = username
 
     @password.setter
-    def password(self, password):
+    def password(self, password: str):
         self.password = password
 
     @staticmethod
@@ -36,16 +37,11 @@ class Credentials:
         PRE : /
         POST : Renvoi un mot de passe fort qui respecte les critères présents dans le while.
         """
-        alph_min = "abcdefghijklmnopqrstuvwxyz"
-        alph_maj = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        nombres = "0123456789"
-        symboles = r"@#$%&/\?"
+        characters = string.ascii_letters + string.punctuation + string.digits
         flag_char = False
         flag_number = False
         flag_special = False
         password = ""
-
-        characters = alph_min + alph_maj + nombres + symboles
         pwd_length = 13
 
         while not flag_char & flag_number & flag_special:
@@ -80,8 +76,7 @@ class Credentials:
         POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
         """
         # vérification du type de la variable "password"
-        assert isinstance(
-            self.password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
 
         flag_char = False
         flag_number = False
@@ -107,10 +102,9 @@ class Credentials:
         POST : Renvoi True si le mdp est unique et fort
         """
         # vérification du type de la variable "password"
-        assert isinstance(
-            self.password, str), "Veuillez entrer une chaine de caractères"
-        if not Credentials.is_strong(self.password):
+        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        if not self.is_strong():
             return "Votre mot de passe n'est pas assez fort"
-        if not Credentials.is_unique(self.password):
+        if not self.is_unique():
             return "Votre mot de passe n'est pas unique "
         return True

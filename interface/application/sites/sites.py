@@ -1,5 +1,6 @@
 """Création de sites"""
 
+
 class Sites:
     """Class pour créer/modifier/supprimer un site"""
 
