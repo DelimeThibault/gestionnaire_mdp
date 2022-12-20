@@ -245,19 +245,28 @@ class PasswordManager(tk.Tk):
         my_user.trace('w', update)
         my_site.trace('w', update)
 
-    def edit_password(self):
-        self.modif_frame = tk.Toplevel(self)
-        self.modif_frame.title("Modifier un mot de passe")
+    def change_password(self, param):
+        self.change_frame = tk.Toplevel(self)
+        self.change_frame.geometry("230x200")
+        self.eval(f'tk::PlaceWindow {str(self.change_frame)} center')
+        if param == "edit":
+            self.change_frame.title("Modifier un mot de passe")
+        elif param == "delete":
+            self.change_frame.title("Supprimer un mot de passe")
         self.selected_site = ""
-        self.listbox_site = tk.Listbox(self.modif_frame)
+        self.listbox_site = tk.Listbox(self.change_frame)
         self.listbox_site.pack()
         self.listbox_site.bind('<<ListboxSelect>>', self.change_site)
         for site in self.password_database:
             self.listbox_site.insert(tk.END, site)
 
         # ,command=lambda:select_credentials())
-        self.site_btn = tk.Button(
-            self.modif_frame, state="disabled", text="Suivant", command=self.select_username)
+        if param == "edit":
+            self.site_btn = tk.Button(
+                self.change_frame, state="disabled", text="Suivant", command=lambda: self.select_username("edit"))
+        elif param == "delete":
+            self.site_btn = tk.Button(
+                self.change_frame, state="disabled", text="Suivant", command=lambda: self.select_username("delete"))
         self.site_btn.pack()
 
     def change_site(self, evt):
@@ -278,10 +287,15 @@ class PasswordManager(tk.Tk):
             self.selected_user = value
             self.cred_btn.config(state="normal")
 
-    def select_username(self):
-        self.modif_frame.destroy()
+    def select_username(self, param):
+        self.change_frame.destroy()
         self.username_frame = tk.Toplevel(self)
-        self.username_frame.title('Modifier un mot de passe')
+        self.username_frame.geometry("230x200")
+        self.eval(f'tk::PlaceWindow {str(self.username_frame)} center')
+        if param == "edit":
+            self.username_frame.title("Modifier un mot de passe")
+        elif param == "delete":
+            self.username_frame.title("Supprimer un mot de passe")
         self.selected_user = ""
         self.listbox_cred = tk.Listbox(self.username_frame)
         self.listbox_cred.pack()
@@ -290,43 +304,52 @@ class PasswordManager(tk.Tk):
             self.listbox_cred.insert(
                 tk.END, username)
 
-        self.cred_btn = tk.Button(
-            self.username_frame, state="disabled", text="Modifier", command=self.modify_credentials)
+        if param == "edit":
+            self.cred_btn = tk.Button(
+                self.username_frame, state="disabled", text="Modifier", command=lambda: self.modify_credentials("edit"))
+        elif param == "delete":
+            self.cred_btn = tk.Button(
+                self.username_frame, state="disabled", text="Supprimer", command=lambda: self.modify_credentials("delete"))
         self.cred_btn.pack()
 
-    def modify_credentials(self):
+    def modify_credentials(self, param):
         self.username_frame.destroy()
         self.modify = tk.Toplevel(self)
-        self.modify.title('Modifier informations')
-        my_user = tk.StringVar(self.modify)
-        my_pwd = tk.StringVar(self.modify)
-        self.label_site = tk.Label(
-            self.modify, text="Nouveau nom d'utilisateur (n'écrivez rien si vous voulez le conserver)")
-        self.label_site.pack()
-        self.user_entry = tk.Entry(self.modify, textvariable=my_user)
-        self.user_entry.pack()
-        self.label_pwd = tk.Label(self.modify, text="Nouveau mot de passe")
-        self.label_pwd.pack()
-        self.pwd_entry = tk.Entry(self.modify, textvariable=my_pwd)
-        self.pwd_entry.pack()
-        self.new_user = self.selected_user
-        self.new_pwd = ''
+        if param == "edit":
+            self.modify.geometry("410x160")
+            self.eval(f'tk::PlaceWindow {str(self.modify)} center')
+            self.modify.title('Modifier informations')
+            my_user = tk.StringVar(self.modify)
+            my_pwd = tk.StringVar(self.modify)
+            self.label_site = tk.Label(
+                self.modify, text="Nouveau nom d'utilisateur (n'écrivez rien si vous voulez le conserver)")
+            self.label_site.pack()
+            self.user_entry = tk.Entry(self.modify, textvariable=my_user)
+            self.user_entry.pack()
+            self.label_pwd = tk.Label(self.modify, text="Nouveau mot de passe \n (n'écrivez rien si vous voulez le conserver,\n tapez 'g' pour créer un nouveau mot de passe fort)")
+            self.label_pwd.pack()
+            self.pwd_entry = tk.Entry(self.modify, textvariable=my_pwd)
+            self.pwd_entry.pack()
+            self.new_user = self.selected_user
+            self.new_pwd = ''
 
-        # Bouton pour modifier
-        self.button = tk.Button(
-            self.modify, text="Mettre à jour", command=self.update_credentials)
-        self.button.pack()
-
+            # Bouton pour modifier
+            self.button = tk.Button(
+                self.modify, text="Mettre à jour", command=self.update_credentials)
+            self.button.pack()
+        elif param == "delete":
+            self.modify.title('supprimer informations')
+            del self.password_database[self.selected_site][self.selected_user]
         def update(*args):
             if len(my_user.get()) == 0:
                 self.new_user = self.selected_user
-                if len(my_pwd.get()) == 0:
+                if my_pwd.get() == "g":
                     self.new_pwd = application.Credentials.password_generation()
                 else:
                     self.new_pwd = my_pwd.get()
             elif len(my_user.get()) > 0:
                 self.new_user = my_user.get()
-                if len(my_pwd.get()) == 0:
+                if my_pwd.get() == "g":
                     self.new_pwd = application.Credentials.password_generation()
                 else:
                     self.new_pwd = my_pwd.get()
@@ -334,12 +357,6 @@ class PasswordManager(tk.Tk):
         my_user.trace('w', update)
         my_pwd.trace('w', update)
 
-    # def delete_password(self):
-    #    selection = self.password_list.curselection()
-    #    if selection:
-    #        index = selection[0]
-    #        del self.password_list[index]
-    #        self.update_list()
     def update_list(self):
         self.sort_password()
         self.password_list.delete(0, "end")
@@ -356,9 +373,13 @@ class PasswordManager(tk.Tk):
 
         # Créer un cadre pour afficher la liste des mots de passe enregistrés et les widgets associés
         self.password_list_frame = tk.Frame()
-        # self.geometry('1200x300')
-        self.center_window(590, 305)
         self.password_list_frame.pack()
+        self.top_password_list_frame = tk.Frame()
+        self.top_password_list_frame.pack(side="top")
+        self.bottom_password_list_frame = tk.Frame()
+        self.bottom_password_list_frame.pack(side="top")
+        # self.geometry('1200x300')
+        self.center_window(450, 325)
         self.password_list_label = tk.Label(
             self.password_list_frame, text="Mots de passe enregistrés:")
         self.password_list_label.pack()
@@ -372,25 +393,31 @@ class PasswordManager(tk.Tk):
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
         self.copy_password_button = tk.Button(
-            self.password_list_frame, text="Copier le mot de passe", command=self.copy_password)
+            self.top_password_list_frame, text="Copier le mot de passe", command=lambda: self.copy_clipboard("password"))
         self.copy_password_button.pack(side="left")
-        #self.copy_password_button.grid(column=0, row=0)
+        # self.copy_password_button.grid(column=0, row=0)
+
+        # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
+        self.copy_username_button = tk.Button(
+            self.top_password_list_frame, text="Copier le nom d'utilisateur", command=lambda: self.copy_clipboard("username"))
+        self.copy_username_button.pack(side="left")
+
 
         # Créer un bouton pour ajouter un nouveau mot de passe
         self.add_password_button = tk.Button(
-            self.password_list_frame, text="Ajouter un mot de passe", command=self.add_info)
+            self.bottom_password_list_frame, text="Ajouter un mot de passe", command=self.add_info)
         self.add_password_button.pack(side="left")
         # self.add_password_button.grid(column=1, row=0)
 
         # Créer un bouton pour modifier le mot de passe sélectionné
         self.edit_password_button = tk.Button(
-            self.password_list_frame, text="Modifier le mot de passe", command=self.edit_password)
+            self.bottom_password_list_frame, text="Modifier le mot de passe", command=lambda: self.change_password("edit"))
         self.edit_password_button.pack(side="left")
         # self.edit_password_button.grid(column=0, row=1)
 
         # Créer un bouton pour supprimer le mot de passe sélectionné
         self.delete_password_button = tk.Button(
-            self.password_list_frame, text="Supprimer le mot de passe")  # ,command=self.delete_password
+            self.bottom_password_list_frame, text="Supprimer le mot de passe" ,command=lambda: self.change_password("delete"))
         self.delete_password_button.pack(side="left")
         # self.delete_password_button.grid(column=1, row=1)
 
@@ -444,17 +471,15 @@ class PasswordManager(tk.Tk):
     def sort_password(self):
         dict_sort = dict(sorted(self.password_database.items())).copy()
         for i in dict_sort:
-            print(i)
             dict_sort[i] = dict(sorted(dict_sort[i].items()))
 
         self.password_database = dict_sort
-
 
     def update_credentials(self):
         site = self.selected_site
         user = self.new_user
         if self.new_pwd == "":
-            self.new_pwd = application.Credentials.password_generation()
+            self.new_pwd = self.password_database[site][user]
         self.password_database[site][user] = self.new_pwd
         self.update_list()
         try:
@@ -473,6 +498,11 @@ class PasswordManager(tk.Tk):
             print(value)
             self.clipboard = value
 
-    def copy_password(self):
+    def copy_clipboard(self,param):
         self.clipboard_clear()
-        self.clipboard_append(self.clipboard.strip().split(", ")[-1])
+        if param == "username":
+            self.clipboard_append(self.clipboard.strip().split(", ")[0])
+            messagebox.showinfo("Succès", "Le nom d'utilisateur a bien été copié!")
+        elif param == "password":
+            self.clipboard_append(self.clipboard.strip().split(", ")[-1])
+            messagebox.showinfo("Succès", "Le mot de passe a bien été copié!")
