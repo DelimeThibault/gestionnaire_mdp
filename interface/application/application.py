@@ -2,9 +2,6 @@
 from .sites.sites import Sites
 from .sites.credentials import Credentials
 
-# Sites = sites.Sites
-# Credentials = credentials.Credentials
-
 
 class Application:
     """Classe parent permettant la création/modification/suppression d'objets Credentials"""

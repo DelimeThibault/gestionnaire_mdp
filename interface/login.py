@@ -4,7 +4,9 @@ from tkinter import filedialog as fd
 import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
+import os
 from .application import application
+from .application.utilities.encryption import Encryption
 
 
 class PasswordManager(tk.Tk):
@@ -20,11 +22,30 @@ class PasswordManager(tk.Tk):
         self.signin_database = dict()
         self.center_window(self.__this_width, self.__this_height)
         self.clipboard = ""
+        self.encrypted_key = ''
+        path = Path(r'db/mykey.key')
+        is_key = os.path.isfile(path)
+        if is_key:
+            if (os.path.getsize(path) == 0):
+                self.encrypted_key = Encryption.key_generation()
+            else:
+                self.encrypted_key = Encryption.read_key()
+        else:
+            self.encrypted_key = Encryption.key_generation()
+
         # Ouvre le fichier contenant les mdp
         try:
-            with open(Path(r"db/credentials.json"), encoding="utf-8") as file:
-                data = json.load(file)
-                self.password_database = data
+            with open(Path(r"db/credentials.json"), "rb") as file:
+                encrypted_data = file.read()
+                # convertit le fichier crypté en un dictionnaire utilisable
+                try:
+                    if os.path.getsize(Path(r"db/credentials.json")) != 0:
+                        decrypted_data = Encryption.decode(
+                            self.encrypted_key, encrypted_data)
+                        self.password_database = decrypted_data
+                except TypeError:
+                    self.password_database = encrypted_data
+
         except FileNotFoundError:
             self.label = tk.Label(self, text='Pas de fichier trouvé')
             self.label.pack()
@@ -38,22 +59,21 @@ class PasswordManager(tk.Tk):
         except JSONDecodeError:
             pass
 
-        # Ouvre le fichier contenant les mdp singin
+        # Ouvre le fichier contenant le mdp signin
         try:
-            with open(Path(r"db/signin.json"), encoding="utf-8") as file:
-                data = json.load(file)
-                self.signin_database = data
+            with open(Path(r"db/signin.json"), 'rb') as file:
+                encrypted_signin = file.read()
+                try:
+                    if os.path.getsize(Path(r"db/signin.json")) != 0:
+                        decrypted_data = Encryption.decode(
+                            self.encrypted_key, encrypted_signin)
+                        self.signin_database = decrypted_data
+                except TypeError:
+                    self.signin_database = encrypted_signin
+
                 self.show_login_page()
         except FileNotFoundError:
-            self.label = tk.Label(self, text='Pas de fichier trouvé')
-            self.label.pack()
-            self.open_button = tk.Button(
-                self,
-                text='Open a File',
-                command=self.select_file
-            )
-
-            self.open_button.pack(expand=True)
+            self.show_signup_page()
         except JSONDecodeError:
             self.show_signup_page()
 
@@ -124,12 +144,9 @@ class PasswordManager(tk.Tk):
         self.signin_database["password"] = password
         self.signin_database["question"] = question
 
-        try:
-            with open(Path(r"db/signin.json"), 'w', encoding="utf-8") as file:
-                json.dump(self.signin_database, file,
-                          sort_keys=True, indent=4)
-        except FileNotFoundError:
-            return "ERROR DB NOT FOUND"
+        encrypted_sign = Encryption.encryption(
+            self.encrypted_key, self.signin_database)
+        Encryption.save_signin(encrypted_sign)
 
         # Afficher un message de confirmation et passer à la page de login
         messagebox.showinfo("Succès", "Inscription réussie!")
@@ -357,12 +374,9 @@ class PasswordManager(tk.Tk):
                 if not self.password_database[self.selected_site]:
                     del self.password_database[self.selected_site]
                 self.update_list()
-                try:
-                    with open(Path(r"db/credentials.json"), 'w', encoding="utf-8") as file:
-                        json.dump(self.password_database, file,
-                                  sort_keys=True, indent=4)
-                except FileNotFoundError:
-                    return ("ERROR DB NOT FOUND")
+                encrypted_json = Encryption.encryption(
+                    self.encrypted_key, self.password_database)
+                Encryption.save_json(encrypted_json)
 
         def update(*args):
             if len(my_user.get()) == 0:
@@ -432,7 +446,7 @@ class PasswordManager(tk.Tk):
 
         # Créer un bouton pour modifier le mot de passe sélectionné
         self.edit_password_button = tk.Button(
-            self.bottom_password_list_frame, text="Modifier le mot de passe", command=lambda: self.change_password("delete"))
+            self.bottom_password_list_frame, text="Modifier le mot de passe", command=lambda: self.change_password("edit"))
         self.edit_password_button.pack(side="left")
 
         # Créer un bouton pour supprimer le mot de passe sélectionné
@@ -468,12 +482,9 @@ class PasswordManager(tk.Tk):
         else:
             self.password_database[key] = infos
         # Ouvre le fichier contenant les mdp
-        try:
-            with open(Path(r"db/credentials.json"), 'w', encoding="utf-8") as file:
-                json.dump(self.password_database, file,
-                          sort_keys=True, indent=4)
-        except FileNotFoundError:
-            return "ERROR DB NOT FOUND"
+        encrypted_json = Encryption.encryption(
+            self.encrypted_key, self.password_database)
+        Encryption.save_json(encrypted_json)
 
         self.update_list()
         self.add_frame.destroy()
@@ -483,7 +494,8 @@ class PasswordManager(tk.Tk):
         PRE : Le paramètre site doit être une string
         POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
         """
-        assert isinstance(site, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            site, str), "Veuillez entrer une chaine de caractères"
         if self.password_database[site]:
             for keys in self.password_database[site]:
                 result = f"{site} : \n{keys} : {self.password_database[site][keys]}"
@@ -510,12 +522,10 @@ class PasswordManager(tk.Tk):
             self.new_pwd = self.password_database[site][user]
         self.password_database[site][user] = self.new_pwd
         self.update_list()
-        try:
-            with open(Path(r"db/credentials.json"), 'w', encoding="utf-8") as file:
-                json.dump(self.password_database, file,
-                          sort_keys=True, indent=4)
-        except FileNotFoundError:
-            return ("ERROR DB NOT FOUND")
+        encrypted_json = Encryption.encryption(
+            self.encrypted_key, self.password_database)
+        Encryption.save_json(encrypted_json)
+
         self.modify.destroy()
 
     def selected_value(self, evt):
