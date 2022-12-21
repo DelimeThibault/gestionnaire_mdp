@@ -395,15 +395,25 @@ class PasswordManager(tk.Tk):
         my_user.trace('w', update)
         my_pwd.trace('w', update)
 
-    def update_list(self):
+    def update_list(self, arg="original", copy=None):
         """Méthode qui rafraichit l'affichage sur l'interface principale"""
-        self.sort_password()
-        self.password_list.delete(0, "end")
-        for site, credentials in self.password_database.items():
-            self.password_list.insert(tk.END, f" {site}:\n")
-            for username, password in credentials.items():
-                self.password_list.insert(tk.END,
-                                          f" \t \t \t \t \t{username}, {password}\n")
+        if arg == "original":
+            self.sort_password()
+            self.password_list.delete(0, "end")
+            for site, credentials in self.password_database.items():
+                self.password_list.insert(tk.END, f" {site}:\n")
+                for username, password in credentials.items():
+                    self.password_list.insert(tk.END,
+                                              f" \t \t \t \t \t{username}, {password}\n")
+        elif arg == "copy":
+            self.sort_password()
+            self.password_list.delete(0, "end")
+            for site, credentials in copy.items():
+                self.password_list.insert(tk.END, f" {site}:\n")
+                for username, password in credentials.items():
+                    self.password_list.insert(tk.END,
+                                              f" \t \t \t \t \t{username}, {password}\n")
+
 
     def show_main_page(self):
         """Page principale qui redirige vers les opérations CRUD (boutons)"""
@@ -417,6 +427,8 @@ class PasswordManager(tk.Tk):
         self.top_password_list_frame.pack(side="top")
         self.bottom_password_list_frame = tk.Frame()
         self.bottom_password_list_frame.pack(side="top")
+        self.search_frame = tk.Frame()
+        self.search_frame.pack(side="top")
         self.center_window(450, 325)
         self.password_list_label = tk.Label(
             self.password_list_frame, text="Mots de passe enregistrés:")
@@ -454,6 +466,30 @@ class PasswordManager(tk.Tk):
             self.bottom_password_list_frame, text="Supprimer le mot de passe", command=lambda: self.change_password("delete"))
         self.delete_password_button.pack(side="left")
 
+        search = tk.StringVar(self.search_frame)
+        self.search_label = tk.Label(self.search_frame, text="Rechercher un mot de passe :")
+        self.search_label.pack(side="left")
+        self.search_entry = tk.Entry(self.search_frame, textvariable=search)
+        self.search_entry.pack(side="left")
+
+        def search_password(*args):
+            """Cette fonction recherche un site entré en paramètre dans la base de donnée
+            PRE : /
+            POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
+            """
+            copy_database = {}
+            site = search.get().upper()
+            if len(site):
+                for i in self.password_database:
+                    if site in i:
+                        copy_database[i] = self.password_database[i]
+                self.update_list("copy", copy_database)
+            else:
+                self.update_list()
+            return None
+
+        search.trace("w", search_password)
+
     def select_file(self):
         """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
         filetypes = (
@@ -489,19 +525,6 @@ class PasswordManager(tk.Tk):
         self.update_list()
         self.add_frame.destroy()
 
-    def search_password(self, site):
-        """Cette fonction recherche un site entré en paramètre dans la base de donnée
-        PRE : Le paramètre site doit être une string
-        POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
-        """
-        assert isinstance(
-            site, str), "Veuillez entrer une chaine de caractères"
-        if self.password_database[site]:
-            for keys in self.password_database[site]:
-                result = f"{site} : \n{keys} : {self.password_database[site][keys]}"
-                return result
-        else:
-            return None
 
     def sort_password(self):
         """Trie notre dictionnaire par ordre alphabétique
