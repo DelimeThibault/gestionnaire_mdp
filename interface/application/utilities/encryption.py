@@ -27,10 +27,10 @@ class Encryption:
     def encryption(key, dict) -> dict:
         """
         Crypte le dictionnaire en paramètre et le renvoie sur base d'une clé
-        PRE:
-            key: clé fernet (str),
+        PRE :
+            key : clé fernet (str),
             dict: dictionnaire non crypté (dict)
-        POST:
+        POST :
             encrypted: dictionnaire transformé en JSON puis crypté avec la clé en paramètre
         """
         dict_json = json.dumps(dict).encode('utf-8')
@@ -42,7 +42,7 @@ class Encryption:
     def decode(key, encrypted_json) -> dict:
         """
         Décrypte un fichier JSON crypté et le transforme en dictionnaire
-        PRE:
+        PRE :
             key: clé fernet (str),
             encrypted_json: json crypté (dict)
         POST:

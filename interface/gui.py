@@ -3,7 +3,7 @@ import tkinter as tk
 import json
 from tkinter import filedialog as fd
 from pathlib import Path
-from .application.application import Application
+from .application import application
 
 
 class Interface(tk.Tk):
@@ -11,6 +11,8 @@ class Interface(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
+        self.create = None
+        self.bouton = None
         self.__this_width = 600
         self.__this_height = 400
 
@@ -61,13 +63,14 @@ class Interface(tk.Tk):
         """Création du widget qui affiche le texte et le bouton pour quitter"""
         self.label = tk.Label(self, text="J'adore Python !")
         self.bouton = tk.Button(self, text="Quitter", command=self.quit)
-        self.create = tk.Button(self, text="Ajouter test", command=Application.add_credentials(
-            self, "Git", "Chris", "mdpnul"))
+        self.create = tk.Button(self, text="Ajouter test", command=application.add_credentials(
+            "Git", "Chris", "mdpnul"))
         self.label.pack()
         self.bouton.pack()
         self.create.pack()
 
-    def select_file(self):
+    @staticmethod
+    def select_file():
         """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
         filetypes = (
             ('json files', '*.json'),

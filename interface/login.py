@@ -1,5 +1,5 @@
+"""Interface graphique qui s'occupe d'appeler des méthodes pour les modules et boutons """
 from json.decoder import JSONDecodeError
-import json
 from tkinter import filedialog as fd
 import tkinter as tk
 from tkinter import messagebox
@@ -15,11 +15,56 @@ class PasswordManager(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         # Créer une fenêtre principale
+        self.search_entry = None
+        self.search_label = None
+        self.delete_password_button = None
+        self.edit_password_button = None
+        self.add_password_button = None
+        self.copy_username_button = None
+        self.copy_password_button = None
+        self.password_list = None
+        self.password_list_label = None
+        self.search_frame = None
+        self.bottom_password_list_frame = None
+        self.top_password_list_frame = None
+        self.button = None
+        self.new_user = None
+        self.pwd_entry = None
+        self.label_pwd = None
+        self.user_entry = None
+        self.label_site = None
+        self.modify = None
+        self.cred_btn = None
+        self.listbox_cred = None
+        self.username_frame = None
+        self.selected_user = None
+        self.site_btn = None
+        self.listbox_site = None
+        self.add_button = None
+        self.selected_site = None
+        self.change_frame = None
+        self.password_list_frame = None
+        self.username_entry = None
+        self.username_label = None
+        self.site_entry = None
+        self.site_label = None
+        self.add_frame = None
+        self.question_button = None
+        self.question_frame = None
+        self.login_button = None
+        self.login_frame = None
+        self.signup_button = None
+        self.question_entry = None
+        self.question_label = None
+        self.password_entry = None
+        self.password_label = None
+        self.signup_frame = None
+        self.new_pwd = None
         self.__this_width = 250
         self.__this_height = 150
         self.title("Gestionnaire de mots de passe")
-        self.password_database = dict()
-        self.signin_database = dict()
+        self.password_database = {}
+        self.signin_database = {}
         self.center_window(self.__this_width, self.__this_height)
         self.clipboard = ""
         self.encrypted_key = ''
@@ -32,7 +77,7 @@ class PasswordManager(tk.Tk):
         is_key = os.path.isfile(keypath)
 
         if is_key:
-            if (os.path.getsize(keypath) == 0):
+            if os.path.getsize(keypath) == 0:
                 self.encrypted_key = Encryption.key_generation()
             else:
                 self.encrypted_key = Encryption.read_key()
@@ -61,7 +106,7 @@ class PasswordManager(tk.Tk):
 
         # Ouvre le fichier contenant les credentials
         try:
-            with open((cred_file), "rb") as file:
+            with open(cred_file, "rb") as file:
                 encrypted_data = file.read()
                 # convertit le fichier crypté en un dictionnaire utilisable
                 try:
@@ -85,6 +130,7 @@ class PasswordManager(tk.Tk):
             print('Erreur IO.')
 
     def center_window(self, width, height):
+        """Méthode qui centre la fenêtre"""
         # Center the window
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -100,6 +146,7 @@ class PasswordManager(tk.Tk):
             f'{width}x{height}+{int(left)}+{int(top)}')
 
     def show_signup_page(self):
+        """Méthode qui affiche la fenêtre lors de l'inscription"""
         # Créer un cadre pour afficher le formulaire d'inscription et les widgets associés
         self.signup_frame = tk.Frame(self)
         self.signup_frame.pack()
@@ -123,6 +170,7 @@ class PasswordManager(tk.Tk):
         self.signup_button.pack()
 
     def signup(self):
+        """Méthode qui créer l'inscription"""
         # Récupérer le mot de passe et la question personnelle entrés par l'utilisateur
         password = self.password_entry.get()
         question = self.question_entry.get()
@@ -148,7 +196,7 @@ class PasswordManager(tk.Tk):
         self.signup_frame.destroy()
 
     def show_login_page(self):
-
+        """Méthode qui affiche la page de connexion"""
         # Créer un cadre pour afficher le formulaire de login
         self.login_frame = tk.Frame(self)
         self.center_window(340, 90)
@@ -156,9 +204,11 @@ class PasswordManager(tk.Tk):
 
         # Créer une étiquette et un champ de saisie pour le mot de passe
         self.password_label = tk.Label(
-            self.login_frame, text="Mot de passe:\n (Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
+            self.login_frame, text="Mot de passe:\n "
+                                   "(Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
         self.password_label = tk.Label(
-            self.login_frame, text="Mot de passe:\n(Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
+            self.login_frame, text="Mot de passe:\n "
+                                   "(Si vous vous ne souvenez pas de votre mot de passe, tapez o.)")
         self.password_label.pack()
         self.password_entry = tk.Entry(self.login_frame, show="*", width=30)
         self.password_entry.pack()
@@ -169,6 +219,7 @@ class PasswordManager(tk.Tk):
         self.login_button.pack()
 
     def show_question_page(self):
+        """Méthode qui affiche la page où l'on pose la question si on oublie son mdp"""
         # détruire la page de login
         self.login_frame.destroy()
         # Créer un cadre pour afficher le formulaire de question
@@ -189,6 +240,7 @@ class PasswordManager(tk.Tk):
         self.question_button.pack()
 
     def login(self):
+        """Méthode qui permet de se connecter à l'application"""
         # Récupérer le mot de passe entré par l'utilisateur
         password = self.password_entry.get()
 
@@ -203,6 +255,7 @@ class PasswordManager(tk.Tk):
             messagebox.showerror("Erreur", "Mot de passe incorrect")
 
     def question(self):
+        """Méthode qui permet de vérifier si la réponse à la question posée est correct"""
         # Récupérer la réponse a la question personnelle entrée par l'utilisateur
         question = self.question_entry.get()
         # Vérifier si la réponse a la question personnelle est correct
@@ -216,6 +269,7 @@ class PasswordManager(tk.Tk):
 
     def add_info(self):
         """Méthode pour ajouter un nouveau mot de passe via une interface supplémentaire"""
+        global my_user
         # Créer un cadre pour ajouter les infos
         self.add_frame = tk.Toplevel(self)
         self.add_frame.title("Ajouter un mot de passe")
@@ -236,7 +290,9 @@ class PasswordManager(tk.Tk):
             self.add_frame, width=30, textvariable=my_user)
         self.username_entry.pack()
         self.password_label = tk.Label(
-            self.add_frame, text="Mot de passe: \n (si vous n'en entrez pas, un mot de passe fort sera automatiquement créé)")
+            self.add_frame, text="Mot de passe: \n "
+                                 "(si vous n'en entrez pas, "
+                                 "un mot de passe fort sera automatiquement créé)")
         self.password_label.pack()
         self.password_entry = tk.Entry(self.add_frame, show="*", width=30)
         self.password_entry.pack()
@@ -256,6 +312,8 @@ class PasswordManager(tk.Tk):
                                   self.username_entry.get(), pwd)
 
         def update(*args):
+            if args == 99:
+                print("args est égal à 99")
             if len(my_site.get()) == 0 or len(my_user.get()) == 0:
                 self.add_button.config(state="disabled")
             else:
@@ -284,10 +342,12 @@ class PasswordManager(tk.Tk):
 
         if param == "edit":
             self.site_btn = tk.Button(
-                self.change_frame, state="disabled", text="Suivant", command=lambda: self.select_username("edit"))
+                self.change_frame, state="disabled",
+                text="Suivant", command=lambda: self.select_username("edit"))
         elif param == "delete":
             self.site_btn = tk.Button(
-                self.change_frame, state="disabled", text="Suivant", command=lambda: self.select_username("delete"))
+                self.change_frame, state="disabled",
+                text="Suivant", command=lambda: self.select_username("delete"))
         self.site_btn.pack()
 
     def change_site(self, evt):
@@ -327,14 +387,17 @@ class PasswordManager(tk.Tk):
                 tk.END, username)
         if param == "edit":
             self.cred_btn = tk.Button(
-                self.username_frame, state="disabled", text="Modifier", command=lambda: self.modify_credentials("edit"))
+                self.username_frame, state="disabled",
+                text="Modifier", command=lambda: self.modify_credentials("edit"))
         elif param == "delete":
             self.cred_btn = tk.Button(
-                self.username_frame, state="disabled", text="Supprimer", command=lambda: self.modify_credentials("delete"))
+                self.username_frame, state="disabled",
+                text="Supprimer", command=lambda: self.modify_credentials("delete"))
         self.cred_btn.pack()
 
     def modify_credentials(self, param):
         """Interface pour entrer le nouveau nom et mot de passe"""
+        global my_user, my_pwd
         self.username_frame.destroy()
         if param == "edit":
             self.modify = tk.Toplevel(self)
@@ -344,12 +407,15 @@ class PasswordManager(tk.Tk):
             my_user = tk.StringVar(self.modify)
             my_pwd = tk.StringVar(self.modify)
             self.label_site = tk.Label(
-                self.modify, text="Nouveau nom d'utilisateur (n'écrivez rien si vous voulez le conserver)")
+                self.modify, text="Nouveau nom d'utilisateur "
+                                  "(n'écrivez rien si vous voulez le conserver)")
             self.label_site.pack()
             self.user_entry = tk.Entry(self.modify, textvariable=my_user)
             self.user_entry.pack()
             self.label_pwd = tk.Label(
-                self.modify, text="Nouveau mot de passe \n (n'écrivez rien si vous voulez le conserver,\n tapez 'g' pour créer un nouveau mot de passe fort)")
+                self.modify, text="Nouveau mot de passe \n "
+                                  "(n'écrivez rien si vous voulez le conserver,\n "
+                                  "tapez 'g' pour créer un nouveau mot de passe fort)")
             self.label_pwd.pack()
             self.pwd_entry = tk.Entry(self.modify, textvariable=my_pwd)
             self.pwd_entry.pack()
@@ -379,6 +445,8 @@ class PasswordManager(tk.Tk):
                 Encryption.save_json(encrypted_json)
 
         def update(*args):
+            if args == 99:
+                print("args est égal à 99")
             if len(my_user.get()) == 0:
                 self.new_user = self.selected_user
                 if my_pwd.get() == "g":
@@ -418,7 +486,6 @@ class PasswordManager(tk.Tk):
         """Page principale qui redirige vers les opérations CRUD (boutons)"""
         # Détruire la page de login et/ou question
         self.login_frame.destroy()
-
         # Créer un cadre pour afficher la liste des mots de passe enregistrés et les widgets associés
         self.password_list_frame = tk.Frame()
         self.password_list_frame.pack()
@@ -442,27 +509,32 @@ class PasswordManager(tk.Tk):
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
         self.copy_password_button = tk.Button(
-            self.top_password_list_frame, text="Copier le mot de passe", command=lambda: self.copy_clipboard("password"))
+            self.top_password_list_frame,
+            text="Copier le mot de passe", command=lambda: self.copy_clipboard("password"))
         self.copy_password_button.pack(side="left")
 
         # Créer un bouton pour copier le mot de passe sélectionné dans le presse-papiers
         self.copy_username_button = tk.Button(
-            self.top_password_list_frame, text="Copier le nom d'utilisateur", command=lambda: self.copy_clipboard("username"))
+            self.top_password_list_frame,
+            text="Copier le nom d'utilisateur", command=lambda: self.copy_clipboard("username"))
         self.copy_username_button.pack(side="left")
 
         # Créer un bouton pour ajouter un nouveau mot de passe
         self.add_password_button = tk.Button(
-            self.bottom_password_list_frame, text="Ajouter un mot de passe", command=self.add_info)
+            self.bottom_password_list_frame,
+            text="Ajouter un mot de passe", command=self.add_info)
         self.add_password_button.pack(side="left")
 
         # Créer un bouton pour modifier le mot de passe sélectionné
         self.edit_password_button = tk.Button(
-            self.bottom_password_list_frame, text="Modifier le mot de passe", command=lambda: self.change_password("edit"))
+            self.bottom_password_list_frame,
+            text="Modifier le mot de passe", command=lambda: self.change_password("edit"))
         self.edit_password_button.pack(side="left")
 
         # Créer un bouton pour supprimer le mot de passe sélectionné
         self.delete_password_button = tk.Button(
-            self.bottom_password_list_frame, text="Supprimer le mot de passe", command=lambda: self.change_password("delete"))
+            self.bottom_password_list_frame,
+            text="Supprimer le mot de passe", command=lambda: self.change_password("delete"))
         self.delete_password_button.pack(side="left")
 
         search = tk.StringVar(self.search_frame)
@@ -473,10 +545,13 @@ class PasswordManager(tk.Tk):
         self.search_entry.pack(side="left")
 
         def search_site(*args):
+
             """Cette fonction recherche un site entré en paramètre dans la base de donnée
             PRE : /
             POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
             """
+            if args == 99:
+                print("args est égal à 99")
             copy_database = {}
             site = search.get().upper()
             if len(site):
@@ -486,11 +561,10 @@ class PasswordManager(tk.Tk):
                 self.update_list("copy", copy_database)
             else:
                 self.update_list()
-            return None
-
         search.trace("w", search_site)
 
-    def select_file(self):
+    @staticmethod
+    def select_file():
         """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
         filetypes = (
             ('json files', '*.json'),
@@ -504,7 +578,7 @@ class PasswordManager(tk.Tk):
 
     def add_password(self, site, username, password):
         """Ajoute un mot de passe dans le fichier si le couple site/username n'existe pas encore"""
-        new_pwd = application.Application.add_credentials(
+        new_pwd = application.add_credentials(
             site, username, password)
         key = next(iter(new_pwd))
         user = next(iter(new_pwd[key]))
@@ -513,8 +587,7 @@ class PasswordManager(tk.Tk):
         if key in self.password_database.keys():
             if user in self.password_database[key]:
                 return "Cet utilisateur existe déjà"
-            else:
-                self.password_database[key].update(infos)
+            self.password_database[key].update(infos)
         else:
             self.password_database[key] = infos
         # Ouvre le fichier contenant les mdp
@@ -524,6 +597,7 @@ class PasswordManager(tk.Tk):
 
         self.update_list()
         self.add_frame.destroy()
+        return None
 
     def sort_password(self):
         """Trie notre dictionnaire par ordre alphabétique
@@ -559,7 +633,7 @@ class PasswordManager(tk.Tk):
             self.clipboard = value
 
     def copy_clipboard(self, param):
-        """Méthode pour copier le mdp ou le user"""
+        """Méthode pour copier le mdp ou le nom d'utilisateur"""
         self.clipboard_clear()
         if param == "username":
             self.clipboard_append(self.clipboard.strip().split(", ")[0])
