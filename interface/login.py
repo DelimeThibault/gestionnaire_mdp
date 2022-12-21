@@ -428,7 +428,7 @@ class PasswordManager(tk.Tk):
         self.bottom_password_list_frame.pack(side="top")
         self.search_frame = tk.Frame()
         self.search_frame.pack(side="top")
-        self.center_window(450, 325)
+        self.center_window(450, 350)
         self.password_list_label = tk.Label(
             self.password_list_frame, text="Mots de passe enregistrés:")
         self.password_list_label.pack()
