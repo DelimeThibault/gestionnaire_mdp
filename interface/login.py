@@ -472,7 +472,7 @@ class PasswordManager(tk.Tk):
         self.search_entry = tk.Entry(self.search_frame, textvariable=search)
         self.search_entry.pack(side="left")
 
-        def search_password(*args):
+        def search_site(*args):
             """Cette fonction recherche un site entré en paramètre dans la base de donnée
             PRE : /
             POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.
@@ -488,7 +488,7 @@ class PasswordManager(tk.Tk):
                 self.update_list()
             return None
 
-        search.trace("w", search_password)
+        search.trace("w", search_site)
 
     def select_file(self):
         """Permet de sélectionner un fichier s'il n'a pas été trouvé"""
