@@ -61,8 +61,7 @@ class Credentials:
         POST : renvoi True si le mdp n'est pas dans le dictionnaire, False s'il y est déjà.
         """
         # vérification du type de la variable "password"
-        assert isinstance(
-            self.password, str), "Veuillez entrer une chaine de caractères"
+        #assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
 
         dict_pwd = {}
         if self.password in dict_pwd:
@@ -76,7 +75,7 @@ class Credentials:
         POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        #assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
 
         flag_char = False
         flag_number = False
@@ -102,9 +101,9 @@ class Credentials:
         POST : Renvoi True si le mdp est unique et fort
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        # assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
         if not self.is_strong():
-            return "Votre mot de passe n'est pas assez fort"
+            print("Votre mot de passe n'est pas assez fort")
         if not self.is_unique():
-            return "Votre mot de passe n'est pas unique "
+            print("Votre mot de passe n'est pas unique")
         return True

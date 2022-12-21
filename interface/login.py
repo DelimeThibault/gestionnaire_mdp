@@ -253,9 +253,15 @@ class PasswordManager(tk.Tk):
         self.password_list_frame.pack()
 
         # Créer un bouton pour ajouter
-        self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled", command=lambda: self.add_password(
-            self.site_entry.get().upper(), self.username_entry.get(), self.password_entry.get()))
+        self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled", command=lambda: check_password(self.password_entry.get()))
         self.add_button.pack()
+        
+
+
+        def check_password(pwd):
+            obj = application.Credentials(self.site_entry.get(), pwd)
+            if obj.good_password():
+                self.add_password(self.site_entry.get().upper(), self.username_entry.get(), pwd)
 
         def update(*args):
             if len(my_site.get()) == 0 or len(my_user.get()) == 0:
