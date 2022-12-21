@@ -414,7 +414,6 @@ class PasswordManager(tk.Tk):
                     self.password_list.insert(tk.END,
                                               f" \t \t \t \t \t{username}, {password}\n")
 
-
     def show_main_page(self):
         """Page principale qui redirige vers les opérations CRUD (boutons)"""
         # Détruire la page de login et/ou question
@@ -467,7 +466,8 @@ class PasswordManager(tk.Tk):
         self.delete_password_button.pack(side="left")
 
         search = tk.StringVar(self.search_frame)
-        self.search_label = tk.Label(self.search_frame, text="Rechercher un mot de passe :")
+        self.search_label = tk.Label(
+            self.search_frame, text="Rechercher un mot de passe :")
         self.search_label.pack(side="left")
         self.search_entry = tk.Entry(self.search_frame, textvariable=search)
         self.search_entry.pack(side="left")
@@ -524,7 +524,6 @@ class PasswordManager(tk.Tk):
 
         self.update_list()
         self.add_frame.destroy()
-
 
     def sort_password(self):
         """Trie notre dictionnaire par ordre alphabétique
