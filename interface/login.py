@@ -23,48 +23,28 @@ class PasswordManager(tk.Tk):
         self.center_window(self.__this_width, self.__this_height)
         self.clipboard = ""
         self.encrypted_key = ''
-        path = Path(r'db/mykey.key')
-        is_key = os.path.isfile(path)
+
+        keypath = Path(r'db/mykey.key')
+        sign_file = Path(r'db/signin.json')
+        cred_file = Path(r'db/credentials.json')
+        icon = Path(r"interface/lock.ico")
+
+        is_key = os.path.isfile(keypath)
+
         if is_key:
-            if (os.path.getsize(path) == 0):
+            if (os.path.getsize(keypath) == 0):
                 self.encrypted_key = Encryption.key_generation()
             else:
                 self.encrypted_key = Encryption.read_key()
         else:
             self.encrypted_key = Encryption.key_generation()
 
-        # Ouvre le fichier contenant les mdp
-        try:
-            with open(Path(r"db/credentials.json"), "rb") as file:
-                encrypted_data = file.read()
-                # convertit le fichier crypté en un dictionnaire utilisable
-                try:
-                    if os.path.getsize(Path(r"db/credentials.json")) != 0:
-                        decrypted_data = Encryption.decode(
-                            self.encrypted_key, encrypted_data)
-                        self.password_database = decrypted_data
-                except TypeError:
-                    self.password_database = encrypted_data
-
-        except FileNotFoundError:
-            self.label = tk.Label(self, text='Pas de fichier trouvé')
-            self.label.pack()
-            self.open_button = tk.Button(
-                self,
-                text='Open a File',
-                command=self.select_file
-            )
-
-            self.open_button.pack(expand=True)
-        except JSONDecodeError:
-            pass
-
         # Ouvre le fichier contenant le mdp signin
         try:
-            with open(Path(r"db/signin.json"), 'rb') as file:
+            with open(sign_file, 'rb') as file:
                 encrypted_signin = file.read()
                 try:
-                    if os.path.getsize(Path(r"db/signin.json")) != 0:
+                    if os.path.getsize(sign_file) != 0:
                         decrypted_data = Encryption.decode(
                             self.encrypted_key, encrypted_signin)
                         self.signin_database = decrypted_data
@@ -79,9 +59,26 @@ class PasswordManager(tk.Tk):
         except JSONDecodeError:
             self.show_signup_page()
 
+        # Ouvre le fichier contenant les credentials
+        try:
+            with open((cred_file), "rb") as file:
+                encrypted_data = file.read()
+                # convertit le fichier crypté en un dictionnaire utilisable
+                try:
+                    if os.path.getsize(cred_file) != 0:
+                        decrypted_data = Encryption.decode(
+                            self.encrypted_key, encrypted_data)
+                        self.password_database = decrypted_data
+                except TypeError:
+                    self.password_database = encrypted_data
+        except FileNotFoundError:
+            pass
+        except JSONDecodeError:
+            pass
+
         # Change l'icône
         try:
-            self.iconbitmap(Path(r"interface/lock.ico"))
+            self.iconbitmap(icon)
         except FileNotFoundError:
             print('Fichier introuvable.')
         except IOError:
@@ -136,11 +133,6 @@ class PasswordManager(tk.Tk):
             messagebox.showerror(
                 "Erreur", "Mot de passe et question personnelle sont obligatoires")
             return
-
-        # Vérifier si l'utilisateur est déjà enregistré dans la base de données
-        # if question in self.signup_database:
-        #    messagebox.showerror("Erreur", "L'utilisateur est déjà enregistré")
-        #    return
 
         # Enregistrer le mot de passe et la question personnelle dans la base de données
         self.signin_database["password"] = password
@@ -253,15 +245,15 @@ class PasswordManager(tk.Tk):
         self.password_list_frame.pack()
 
         # Créer un bouton pour ajouter
-        self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled", command=lambda: check_password(self.password_entry.get()))
+        self.add_button = tk.Button(self.add_frame, text="Ajouter", state="disabled",
+                                    command=lambda: check_password(self.password_entry.get()))
         self.add_button.pack()
-        
-
 
         def check_password(pwd):
             obj = application.Credentials(self.site_entry.get(), pwd)
             if obj.good_password():
-                self.add_password(self.site_entry.get().upper(), self.username_entry.get(), pwd)
+                self.add_password(self.site_entry.get().upper(),
+                                  self.username_entry.get(), pwd)
 
         def update(*args):
             if len(my_site.get()) == 0 or len(my_user.get()) == 0:
