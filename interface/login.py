@@ -307,7 +307,13 @@ class PasswordManager(tk.Tk):
 
         def check_password(pwd):
             obj = application.Credentials(self.site_entry.get(), pwd)
+            validation, msg_error = obj.good_password()
             if obj.good_password():
+                self.add_password(self.site_entry.get().upper(),
+                                  self.username_entry.get(), pwd)
+            if not validation:
+                messagebox.showinfo(
+                    'Attention', msg_error, icon=messagebox.WARNING)
                 self.add_password(self.site_entry.get().upper(),
                                   self.username_entry.get(), pwd)
 
@@ -545,7 +551,6 @@ class PasswordManager(tk.Tk):
         self.search_entry.pack(side="left")
 
         def search_site(*args):
-
             """Cette fonction recherche un site entré en paramètre dans la base de donnée
             PRE : /
             POST : Renvoi une string contenant le nom du site, le nom d'utilisateur et le mdp.

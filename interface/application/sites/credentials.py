@@ -61,7 +61,8 @@ class Credentials:
         POST : renvoi True si le mdp n'est pas dans le dictionnaire, False s'il y est déjà.
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaîne de caractères"
 
         dict_pwd = {}
         if self.password in dict_pwd:
@@ -70,20 +71,17 @@ class Credentials:
 
     def is_strong(self):
         """Fonction qui permet de voir si le mot de passe est assez fort (possède maj, min,
-        nombre, caractère spécial, longueur de 13 caractères)
-        PRE : une chaine de caractères
+        nombre, caractère spécial)
+        PRE : une chaîne de caractères
         POST : Renvoi True si le mdp les critères sont respectées. False si ce n'est pas le cas
         """
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
-
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaine de caractères"
         flag_char = False
         flag_number = False
         flag_special = False
-        length = len(self.password)
 
-        if length <= 12:
-            return f"Votre mot de passe n'est pas assez long. Il possède {length} caractères"
         for i in self.password:
             if i.isalpha():
                 flag_char = True
@@ -98,12 +96,19 @@ class Credentials:
     def good_password(self):
         """Vérification si le mot de passe est correct
         PRE : un mot de passe doit être défini
-        POST : Renvoi True si le mdp est unique et fort
+        POST : Renvoie True si le mdp est unique, fort et d'une longueur minimum de 12
         """
+        not_secure = ""
         # vérification du type de la variable "password"
-        assert isinstance(self.password, str), "Veuillez entrer une chaine de caractères"
+        assert isinstance(
+            self.password, str), "Veuillez entrer une chaîne de caractères"
+        if len(self.password) <= 12:
+            not_secure += "Votre mot de passe est trop court, longueur minimum: 12\n"
+            return False, not_secure
         if not self.is_strong():
-            print("Votre mot de passe n'est pas assez fort")
+            not_secure += "Votre mot de passe n'est pas assez fort:\n Il faut au moins un caractère alphanumérique, un chiffre et un caractère spécial\n"
+            return False, not_secure
         if not self.is_unique():
-            print("Votre mot de passe n'est pas unique")
+            not_secure += "Votre mot de passe n'est pas unique"
+            return False, not_secure
         return True
