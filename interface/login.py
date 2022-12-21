@@ -68,10 +68,12 @@ class PasswordManager(tk.Tk):
                         decrypted_data = Encryption.decode(
                             self.encrypted_key, encrypted_signin)
                         self.signin_database = decrypted_data
+                        self.show_login_page()
+                    else:
+                        self.show_signup_page()
                 except TypeError:
                     self.signin_database = encrypted_signin
 
-                self.show_login_page()
         except FileNotFoundError:
             self.show_signup_page()
         except JSONDecodeError:
