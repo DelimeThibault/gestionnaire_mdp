@@ -12,3 +12,4 @@ def add_credentials(site: str, username: str, password: str):
     new_cred = Credentials(username, password)
     obj = {site: {new_cred.username: new_cred.password}}
     return obj
+

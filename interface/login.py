@@ -130,7 +130,12 @@ class PasswordManager(tk.Tk):
             print('Erreur IO.')
 
     def center_window(self, width, height):
-        """Méthode qui centre la fenêtre"""
+        """Méthode qui centre la fenêtre
+
+        PRE : recoit la largeur (int) et la hauteur (int)
+        POST : renvoie la fenêtre de manière centrée
+
+        """
         # Center the window
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -307,8 +312,8 @@ class PasswordManager(tk.Tk):
 
         def check_password(pwd):
             obj = application.Credentials(self.site_entry.get(), pwd)
-            validation, msg_error = obj.good_password()
-            if obj.good_password():
+            (validation, msg_error) = obj.good_password()
+            if validation:
                 self.add_password(self.site_entry.get().upper(),
                                   self.username_entry.get(), pwd)
             if not validation:
@@ -440,9 +445,6 @@ class PasswordManager(tk.Tk):
                 icon=messagebox.WARNING)
             if answer:
                 del self.password_database[self.selected_site][self.selected_user]
-                messagebox.showinfo(
-                    title='Etat',
-                    message="L'utilisateur a été supprimé")
                 if not self.password_database[self.selected_site]:
                     del self.password_database[self.selected_site]
                 self.update_list()
@@ -638,7 +640,12 @@ class PasswordManager(tk.Tk):
             self.clipboard = value
 
     def copy_clipboard(self, param):
-        """Méthode pour copier le mdp ou le nom d'utilisateur"""
+        """Méthode pour copier le mdp ou le nom d'utilisateur
+
+        PRE : reçoit un paramètre "mot de passe" ou "étudiant"(String)
+        POST : copie le paramètre demande dans le clipboard
+        """
+
         self.clipboard_clear()
         if param == "username":
             self.clipboard_append(self.clipboard.strip().split(", ")[0])

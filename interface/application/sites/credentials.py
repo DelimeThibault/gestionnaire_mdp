@@ -104,11 +104,11 @@ class Credentials:
             self.password, str), "Veuillez entrer une chaîne de caractères"
         if len(self.password) <= 12:
             not_secure += "Votre mot de passe est trop court, longueur minimum: 12\n"
-            return False, not_secure
+            return [False, not_secure]
         if not self.is_strong():
             not_secure += "Votre mot de passe n'est pas assez fort:\n Il faut au moins un caractère alphanumérique, un chiffre et un caractère spécial\n"
-            return False, not_secure
+            return [False, not_secure]
         if not self.is_unique():
             not_secure += "Votre mot de passe n'est pas unique"
-            return False, not_secure
-        return True
+            return [False, not_secure]
+        return [True, "secure"]
