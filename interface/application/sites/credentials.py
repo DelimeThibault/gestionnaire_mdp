@@ -63,7 +63,6 @@ class Credentials:
         # vérification du type de la variable "password"
         assert isinstance(
             self.password, str), "Veuillez entrer une chaîne de caractères"
-
         dict_pwd = {}
         if self.password in dict_pwd:
             return False
