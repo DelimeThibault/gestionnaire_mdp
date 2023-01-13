@@ -8,7 +8,6 @@ import os
 from .application import application
 from .application.utilities.encryption import Encryption
 
-
 class PasswordManager(tk.Tk):
     """Interface graphique avec Tkinter"""
 
